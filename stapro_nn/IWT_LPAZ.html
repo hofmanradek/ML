@@ -11763,14 +11763,14 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
 <span class="c1">#%load_ext sql  # uncomment if you have ipython-sql installed</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">pandas</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="k">import</span> <span class="n">Image</span>
 </pre></div>
 
 </div>
@@ -11805,7 +11805,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;pics&#39;</span><span class="p">,</span> <span class="s1">&#39;StaPro_nn_cascade.png&#39;</span><span class="p">))</span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;pics&#39;</span><span class="p">,</span> <span class="s1">&#39;StaPro_nn_cascade.png&#39;</span><span class="p">))</span> 
 </pre></div>
 
 </div>
@@ -14621,7 +14621,7 @@ arrival in question within a fixed time window  60 seconds by default). The valu
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;pics&#39;</span><span class="p">,</span> <span class="s1">&#39;nn_topology.png&#39;</span><span class="p">))</span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;pics&#39;</span><span class="p">,</span> <span class="s1">&#39;nn_topology.png&#39;</span><span class="p">))</span> 
 </pre></div>
 
 </div>
@@ -18091,7 +18091,7 @@ FPAtRigKFAWKAutIAaA+5h2y2Zud8ToWpZIuChQFigL7PAX+P7F+m+WV93GQAAAAAElFTkSuQmCC
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">HOFMAN</span><span class="nd">@repadb</span> <span class="o">&gt;</span> <span class="n">select</span> <span class="n">sta</span><span class="p">,</span> <span class="n">iphase</span><span class="p">,</span> <span class="n">count</span><span class="p">(</span><span class="n">iphase</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">reb.arrival</span> <span class="nn">where</span> <span class="nn">sta</span><span class="o">=</span><span class="s1">&#39;LPAZ&#39;</span> <span class="n">group</span> <span class="n">by</span> <span class="n">sta</span><span class="p">,</span> <span class="n">iphase</span> <span class="n">order</span> <span class="n">by</span> <span class="n">count</span><span class="p">(</span><span class="n">iphase</span><span class="p">);</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">HOFMAN</span><span class="nd">@repadb</span> <span class="o">&gt;</span> <span class="n">select</span> <span class="n">sta</span><span class="p">,</span> <span class="n">iphase</span><span class="p">,</span> <span class="n">count</span><span class="p">(</span><span class="n">iphase</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">reb.arrival</span> <span class="n">where</span> <span class="n">sta</span><span class="o">=</span><span class="s1">&#39;LPAZ&#39;</span> <span class="n">group</span> <span class="n">by</span> <span class="n">sta</span><span class="p">,</span> <span class="n">iphase</span> <span class="n">order</span> <span class="n">by</span> <span class="n">count</span><span class="p">(</span><span class="n">iphase</span><span class="p">);</span>
 
 <span class="n">STA</span>    <span class="n">IPHASE</span>   <span class="n">COUNT</span><span class="p">(</span><span class="n">IPHASE</span><span class="p">)</span>                                                                                                                                                                                                                                                 
 <span class="o">------</span> <span class="o">--------</span> <span class="o">-------------</span>                                                                                                                                                                                                                                                 
@@ -18163,7 +18163,7 @@ FPAtRigKFAWKAutIAaA+5h2y2Zud8ToWpZIuChQFigL7PAX+P7F+m+WV93GQAAAAAElFTkSuQmCC
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">HOFMAN</span><span class="nd">@repadb</span> <span class="o">&gt;</span> <span class="n">select</span> <span class="n">r</span><span class="o">.</span><span class="n">sta</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">iphase</span><span class="p">,</span> <span class="n">count</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">iphase</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">reb.arrival</span> <span class="nn">r</span> <span class="nn">join</span> <span class="nn">idcx.arrival</span> <span class="nn">i</span> <span class="nn">on</span> <span class="nn">i.arid</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">arid</span> <span class="n">where</span> <span class="n">i</span><span class="o">.</span><span class="n">sta</span><span class="o">=</span><span class="s1">&#39;LPAZ&#39;</span> <span class="n">group</span> <span class="n">by</span> <span class="n">r</span><span class="o">.</span><span class="n">sta</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">iphase</span> <span class="n">order</span> <span class="n">by</span> <span class="n">count</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">iphase</span><span class="p">);</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">HOFMAN</span><span class="nd">@repadb</span> <span class="o">&gt;</span> <span class="n">select</span> <span class="n">r</span><span class="o">.</span><span class="n">sta</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">iphase</span><span class="p">,</span> <span class="n">count</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">iphase</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">reb.arrival</span> <span class="n">r</span> <span class="n">join</span> <span class="n">idcx</span><span class="o">.</span><span class="n">arrival</span> <span class="n">i</span> <span class="n">on</span> <span class="n">i</span><span class="o">.</span><span class="n">arid</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">arid</span> <span class="n">where</span> <span class="n">i</span><span class="o">.</span><span class="n">sta</span><span class="o">=</span><span class="s1">&#39;LPAZ&#39;</span> <span class="n">group</span> <span class="n">by</span> <span class="n">r</span><span class="o">.</span><span class="n">sta</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">iphase</span> <span class="n">order</span> <span class="n">by</span> <span class="n">count</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">iphase</span><span class="p">);</span>
 
 <span class="n">STA</span>    <span class="n">IPHASE</span>   <span class="n">COUNT</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">IPHASE</span><span class="p">)</span>                                                                                                                                                                                                                                               
 <span class="o">------</span> <span class="o">--------</span> <span class="o">---------------</span>                                                                                                                                                                                                                                               
@@ -18278,7 +18278,7 @@ FPAtRigKFAWKAutIAaA+5h2y2Zud8ToWpZIuChQFigL7PAX+P7F+m+WV93GQAAAAAElFTkSuQmCC
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1">#let&#39;s get data frame from our csv</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#let&#39;s get data frame from our csv</span>
 <span class="n">df_orig</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;LPAZ_REB_data.txt&#39;</span><span class="p">))</span>
 <span class="c1">#rename columns - strip and tranform to upper - because the are in fix format, e.g. &#39;    RECT&#39;</span>
 <span class="n">df_orig</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df_orig</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
@@ -18294,7 +18294,7 @@ FPAtRigKFAWKAutIAaA+5h2y2Zud8ToWpZIuChQFigL7PAX+P7F+m+WV93GQAAAAAElFTkSuQmCC
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">df_orig</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_orig</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -18326,7 +18326,7 @@ FPAtRigKFAWKAutIAaA+5h2y2Zud8ToWpZIuChQFigL7PAX+P7F+m+WV93GQAAAAAElFTkSuQmCC
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">df_orig</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_orig</span>
 </pre></div>
 
 </div>
@@ -19615,9 +19615,9 @@ FPAtRigKFAWKAutIAaA+5h2y2Zud8ToWpZIuChQFigL7PAX+P7F+m+WV93GQAAAAAElFTkSuQmCC
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># We want to classify signal on Noise vs. Waves of type P or S</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># We want to classify signal on Noise vs. Waves of type P or S</span>
 <span class="c1"># copy dataframe to get IPHASE in {0,1}: 0 for P, 1 otherwise</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df_orig</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df_orig</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_orig</span><span class="o">.</span><span class="n">IPHASE</span> <span class="o">==</span> <span class="s1">&#39;N       &#39;</span><span class="p">,</span> <span class="s1">&#39;IPHASE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_orig</span><span class="o">.</span><span class="n">IPHASE</span> <span class="o">!=</span> <span class="s1">&#39;N       &#39;</span><span class="p">,</span> <span class="s1">&#39;IPHASE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 </pre></div>
@@ -19632,8 +19632,8 @@ FPAtRigKFAWKAutIAaA+5h2y2Zud8ToWpZIuChQFigL7PAX+P7F+m+WV93GQAAAAAElFTkSuQmCC
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">df_orig</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="s1">&#39;IPHASE&#39;</span><span class="p">])</span>
-<span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="s1">&#39;IPHASE&#39;</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">df_orig</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="s1">&#39;IPHASE&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="s1">&#39;IPHASE&#39;</span><span class="p">])</span>
 </pre></div>
 
 </div>
@@ -19661,7 +19661,7 @@ FPAtRigKFAWKAutIAaA+5h2y2Zud8ToWpZIuChQFigL7PAX+P7F+m+WV93GQAAAAAElFTkSuQmCC
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># to be sure, convert to numeric</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># to be sure, convert to numeric</span>
 <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pandas</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
 </pre></div>
 
@@ -20951,7 +20951,7 @@ FPAtRigKFAWKAutIAaA+5h2y2Zud8ToWpZIuChQFigL7PAX+P7F+m+WV93GQAAAAAElFTkSuQmCC
 <div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># columns corresponding to input</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># columns corresponding to input</span>
 <span class="n">x_indices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;PER&#39;</span><span class="p">,</span> <span class="s1">&#39;RECT&#39;</span><span class="p">,</span> <span class="s1">&#39;PLANS&#39;</span><span class="p">,</span> <span class="s1">&#39;INANG1&#39;</span><span class="p">,</span> <span class="s1">&#39;INANG3&#39;</span><span class="p">,</span> <span class="s1">&#39;HMXMN&#39;</span><span class="p">,</span> <span class="s1">&#39;HVRATP&#39;</span><span class="p">,</span> <span class="s1">&#39;HVRAT&#39;</span><span class="p">,</span> 
              <span class="s1">&#39;HTOV1&#39;</span><span class="p">,</span> <span class="s1">&#39;HTOV2&#39;</span><span class="p">,</span> <span class="s1">&#39;HTOV3&#39;</span><span class="p">,</span> <span class="s1">&#39;HTOV4&#39;</span><span class="p">,</span> <span class="s1">&#39;HTOV5&#39;</span><span class="p">]</span>
 <span class="c1"># columns corresponding to output</span>
@@ -20968,7 +20968,7 @@ FPAtRigKFAWKAutIAaA+5h2y2Zud8ToWpZIuChQFigL7PAX+P7F+m+WV93GQAAAAAElFTkSuQmCC
 <div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">shuffle</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="k">import</span> <span class="n">shuffle</span>
 <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>
 
 <span class="c1"># Now in Ns we have rows with iphase N and the rest in noN</span>
@@ -20979,13 +20979,13 @@ FPAtRigKFAWKAutIAaA+5h2y2Zud8ToWpZIuChQFigL7PAX+P7F+m+WV93GQAAAAAElFTkSuQmCC
 <span class="n">noN_Y</span> <span class="o">=</span> <span class="n">noN</span><span class="p">[</span><span class="n">y_indices</span><span class="p">]</span>
 <span class="n">N_X</span> <span class="o">=</span> <span class="n">N</span><span class="p">[</span><span class="n">x_indices</span><span class="p">]</span>
 <span class="n">N_Y</span> <span class="o">=</span> <span class="n">N</span><span class="p">[</span><span class="n">y_indices</span><span class="p">]</span>
-<span class="k">print</span><span class="p">(</span><span class="n">noN_X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">noN_Y</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">N_X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">N_Y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">noN_X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">noN_Y</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">N_X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">N_Y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
 <span class="n">noNm_X</span> <span class="o">=</span> <span class="n">noN_X</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()</span>
 <span class="n">noNm_Y</span> <span class="o">=</span> <span class="n">noN_Y</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()</span>
 <span class="n">Nm_X</span> <span class="o">=</span> <span class="n">N_X</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()</span>
 <span class="n">Nm_Y</span> <span class="o">=</span> <span class="n">N_Y</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()</span>
-<span class="k">print</span><span class="p">(</span><span class="n">noNm_X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">noNm_Y</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">N_X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">N_Y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">noNm_X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">noNm_Y</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">N_X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">N_Y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -21022,7 +21022,7 @@ FPAtRigKFAWKAutIAaA+5h2y2Zud8ToWpZIuChQFigL7PAX+P7F+m+WV93GQAAAAAElFTkSuQmCC
 <div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">max_index</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">N</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">noN</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">max_index</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">N</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">noN</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">thr</span> <span class="o">=</span> <span class="mf">0.75</span>
 <span class="n">thr_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">thr</span> <span class="o">*</span> <span class="n">max_index</span><span class="p">)</span>
  
@@ -21032,8 +21032,8 @@ FPAtRigKFAWKAutIAaA+5h2y2Zud8ToWpZIuChQFigL7PAX+P7F+m+WV93GQAAAAAElFTkSuQmCC
 <span class="c1"># test set</span>
 <span class="n">X_test</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">noNm_X</span><span class="p">[</span><span class="n">thr_index</span><span class="p">:</span><span class="n">max_index</span><span class="p">,</span> <span class="p">:],</span> <span class="n">Nm_X</span><span class="p">[</span><span class="n">thr_index</span><span class="p">:</span><span class="n">max_index</span><span class="p">,</span> <span class="p">:]])</span>
 <span class="n">Y_test</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">noNm_Y</span><span class="p">[</span><span class="n">thr_index</span><span class="p">:</span><span class="n">max_index</span><span class="p">,</span> <span class="p">:],</span> <span class="n">Nm_Y</span><span class="p">[</span><span class="n">thr_index</span><span class="p">:</span><span class="n">max_index</span><span class="p">,</span> <span class="p">:]])</span>
-<span class="k">print</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">Y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">Y_test</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">Y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">Y_test</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -21070,9 +21070,9 @@ FPAtRigKFAWKAutIAaA+5h2y2Zud8ToWpZIuChQFigL7PAX+P7F+m+WV93GQAAAAAElFTkSuQmCC
 <div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
-<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="k">import</span> <span class="n">Dense</span>
 </pre></div>
 
 </div>
@@ -21099,7 +21099,7 @@ FPAtRigKFAWKAutIAaA+5h2y2Zud8ToWpZIuChQFigL7PAX+P7F+m+WV93GQAAAAAElFTkSuQmCC
 <div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">n_input</span> <span class="o">=</span> <span class="mi">13</span>  <span class="c1"># a sub-set of original inputs</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">n_input</span> <span class="o">=</span> <span class="mi">13</span>  <span class="c1"># a sub-set of original inputs</span>
 <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>
 
 <span class="c1"># create model</span>
@@ -21133,7 +21133,7 @@ FPAtRigKFAWKAutIAaA+5h2y2Zud8ToWpZIuChQFigL7PAX+P7F+m+WV93GQAAAAAElFTkSuQmCC
 <div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -21181,12 +21181,12 @@ _________________________________________________________________
 <div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># fit the model</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># fit the model</span>
 <span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> 
           <span class="n">epochs</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> 
           <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> 
           <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-          <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+          <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
           <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">))</span>
 </pre></div>
 
@@ -21209,7 +21209,7 @@ _________________________________________________________________
 <div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">211</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s1">&#39;acc&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;acc&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s1">&#39;val_acc&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;val_acc&#39;</span><span class="p">)</span>
@@ -22016,11 +22016,11 @@ HA6HI03jxIrD4XA4HI40jRMrDofD4XA40jROrDgcDofD4UjTOLHicDgcDocjTePEisPhcDgcjjTN
 <div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">Y_true</span> <span class="o">=</span> <span class="n">Y_test</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Y_true</span> <span class="o">=</span> <span class="n">Y_test</span>
 <span class="c1"># calculate predicted values</span>
 <span class="n">Y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 <span class="c1"># predictions are outputted as floats from [0,1]</span>
-<span class="k">print</span><span class="p">(</span><span class="n">Y_pred</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Y_pred</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
 </pre></div>
 
 </div>
@@ -22056,7 +22056,7 @@ HA6HI03jxIrD4XA4HI40jRMrDofD4XA40jROrDgcDofD4UjTOLHicDgcDocjTePEisPhcDgcjjTN
 <div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">confusion_matrix</span>
 
 <span class="c1"># we must translate it to 0, 1 based on thresholding at 0.5</span>
 <span class="c1"># where &lt; 0.5 set to 0, to 1 otherwise</span>
@@ -22064,7 +22064,7 @@ HA6HI03jxIrD4XA4HI40jRMrDofD4XA40jROrDgcDofD4UjTOLHicDgcDocjTePEisPhcDgcjjTN
 
 <span class="c1"># calculate confusion matrix</span>
 <span class="n">conf_mat</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">Y_true</span><span class="p">,</span> <span class="n">Y_pred</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">conf_mat</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">conf_mat</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -22092,7 +22092,7 @@ HA6HI03jxIrD4XA4HI40jRMrDofD4XA40jROrDgcDofD4UjTOLHicDgcDocjTePEisPhcDgcjjTN
 <div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">Y_test</span><span class="o">.</span><span class="n">shape</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Y_test</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
 </div>
@@ -22130,7 +22130,7 @@ HA6HI03jxIrD4XA4HI40jRMrDofD4XA40jROrDgcDofD4UjTOLHicDgcDocjTePEisPhcDgcjjTN
 <div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1">#save model and weights</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#save model and weights</span>
 <span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;LPAZ_model.h5&#39;</span><span class="p">)</span>
 </pre></div>
 
@@ -22138,6 +22138,29 @@ HA6HI03jxIrD4XA4HI40jRMrDofD4XA40jROrDgcDofD4UjTOLHicDgcDocjTePEisPhcDgcjjTN
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="References">References<a class="anchor-link" href="#References">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>WANG, J., Adaptive training of neural networks for automatic seismic phase identification. Monitoring the Comprehensive Nuclear-Test-Bant Treaty: Data Processing and Infrasound (2002): 1021-1041.</li>
+<li>SERENO, T. and PATNAIK, G.  1993), Initial Wave-type Identification with Neural Networks and its
+Contribution to Automated Processing in IMS Version 3.0, Technical Report, SAIC-93/1219.</li>
+</ul>
+
+</div>
+</div>
 </div>
     </div>
   </div>
