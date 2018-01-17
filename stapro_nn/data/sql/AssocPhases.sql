@@ -1,16 +1,20 @@
 
-#get 3C stations
+--get 3C stations
 select * from static.affiliation a, static.site s where a.sta=a.net and a.sta=s.sta and s.statype='ss' and s.offdate < 0 and a.sta not in (select sta from static.affiliation where NET='CUR_HYD') and a.sta in (select sta from static.affiliation where NET='CUR_PRI' or NET='CUR_AUX') order by a.sta;
 
-# how many associated phases do we have in 2 years for all 3C stations in the leb
+--how many associated phases do we have in 2 years for all 3C stations in the leb
 select count(*) from leb.assoc where sta in (select a.sta from static.affiliation a, static.site s where a.sta=a.net and a.sta=s.sta and s.statype='ss' and s.offdate < 0 and a.sta not in (select sta from static.affiliation where NET='CUR_HYD') and a.sta in (select sta from static.affiliation where NET='CUR_PRI' or NET='CUR_AUX')) and lddate > sysdate - 730;
 
+/*
   COUNT(*)
 ----------
     731172
+*/
 
-# how many associated phases do we have in 2 years for all 3C stations in the leb
+-- how many associated phases do we have in 2 years for all 3C stations in the leb
 select sta, count(*) as num from leb.assoc where sta in (select a.sta from static.affiliation a, static.site s where a.sta=a.net and a.sta=s.sta and s.statype='ss' and s.offdate < 0 and a.sta not in (select sta from static.affiliation where NET='CUR_HYD') and a.sta in (select sta from static.affiliation where NET='CUR_PRI' or NET='CUR_AUX')) and lddate > sysdate - 730 group by sta order by num desc;
+
+/*
 STA	      NUM
 ------ ----------
 STKA	    24963
@@ -131,10 +135,13 @@ APG	      410
 TLY	       29
 
 116 rows selected.
+*/
 
-# types of phases and their number across all 3C stations
+
+-- types of phases and their number across all 3C stations
 select phase, count(*) as num from leb.assoc where sta in (select a.sta from static.affiliation a, static.site s where a.sta=a.net and a.sta=s.sta and s.statype='ss' and s.offdate < 0 and a.sta not in (select sta from static.affiliation where NET='CUR_HYD') and a.sta in (select sta from static.affiliation where NET='CUR_PRI' or NET='CUR_AUX')) and lddate > sysdate - 730 group by phase order by num desc;
 
+/*
 PHASE		NUM
 -------- ----------
 LR	     292362
@@ -185,9 +192,12 @@ SKKS		  2
 SP		  1
 P4KP		  1
 I		  1
+*/
 
-# types of phases and their number for LPAZ for the last 2 years
+
+-- types of phases and their number for LPAZ for the last 2 years
 select phase, count(*) as num from leb.assoc where sta='LPAZ' and lddate > sysdate - 730 group by phase order by num desc;
+/*
 PHASE		NUM
 -------- ----------
 P	       6023
@@ -226,18 +236,17 @@ P3KP		  1
 PKP2bc		  1
 
 Components of the training dataset: Query1+Query2+Query3+Query4  - will need to adjust time period because some types of data are underrepresented
+*/
 
 
-
-#Query1: get arids for all regional P phases from leb.assoc that are not retimed by more than 2 seconds (for LPAZ and for roughly the last 2 years)
+--Query1: get arids for all regional P phases from leb.assoc that are not retimed by more than 2 seconds (for LPAZ and for roughly the last 2 years)
 select a.arid from leb.assoc l, leb.arrival la, idcx.arrival a where a.arid=l.arid and l.arid=la.arid and abs(a.time - la.time) <= 2 and l.phase in ('Pn', 'Pg') and l.sta='LPAZ' and l.lddate > sysdate - 730;   
 
-542 rows selected.
+--542 rows selected.
 
-#Query1: plug the arids from before into Radek query to form part 1 of the training dataset
+--Query1: plug the arids from before into Radek query to form part 1 of the training dataset
 select r.sta, r.arid, r.time, r.iphase, r.per, ap.rect, ap.plans, ap.inang1, ap.inang3, ap.hmxmn, ap.hvratp, ap.hvrat, a1.htov "htov1", a2.htov "htov2", a3.htov "htov3", a4.htov "htov4", a5.htov "htov5" 
-from 
-     reb.arrival r join reb.apma ap on r.arid=ap.arid 
+from reb.arrival r join reb.apma ap on r.arid=ap.arid 
 join reb.amp3c a1 on r.arid=a1.arid 
 join reb.amp3c a2 on r.arid=a2.arid 
 join reb.amp3c a3 on r.arid=a3.arid 
@@ -245,19 +254,18 @@ join reb.amp3c a4 on r.arid=a4.arid
 join reb.amp3c a5 on r.arid=a5.arid 
 where r.sta='LPAZ' and a1.cfreq=0.25 and a2.cfreq=0.5 and a3.cfreq=1 and a4.cfreq=2 and a5.cfreq=4
 and r.arid in (select a.arid from leb.assoc l, leb.arrival la, idcx.arrival a where a.arid=l.arid and l.arid=la.arid and abs(a.time - la.time) <= 2 and l.phase in ('Pn', 'Pg') and l.sta='LPAZ')
-order by r.time
+order by r.time;
 
-454 rows selected 
+--454 rows selected 
 
-#Query2: Station LPAZ - arids for all regional S phases from leb.assoc that are not retimed by more than 2 seconds - this is part of the training dataset. May need to take more than 2 years
+--Query2: Station LPAZ - arids for all regional S phases from leb.assoc that are not retimed by more than 2 seconds - this is part of the training dataset. May need to take more than 2 years
 select a.arid from leb.assoc l, leb.arrival la, idcx.arrival a where a.arid=l.arid and l.arid=la.arid and abs(a.time - la.time) <= 2 and l.phase in ('Sn', 'Lg', 'Rg') and l.sta='LPAZ' and l.lddate > sysdate - 730;   
 
-40 rows selected.
+--40 rows selected.
 
-#plug into Radek query for part 2 of the training dataset
+--plug into Radek query for part 2 of the training dataset
 select r.sta, r.arid, r.time, r.iphase, r.per, ap.rect, ap.plans, ap.inang1, ap.inang3, ap.hmxmn, ap.hvratp, ap.hvrat, a1.htov "htov1", a2.htov "htov2", a3.htov "htov3", a4.htov "htov4", a5.htov "htov5" 
-from 
-     reb.arrival r join reb.apma ap on r.arid=ap.arid 
+from reb.arrival r join reb.apma ap on r.arid=ap.arid 
 join reb.amp3c a1 on r.arid=a1.arid 
 join reb.amp3c a2 on r.arid=a2.arid 
 join reb.amp3c a3 on r.arid=a3.arid 
@@ -265,19 +273,24 @@ join reb.amp3c a4 on r.arid=a4.arid
 join reb.amp3c a5 on r.arid=a5.arid 
 where r.sta='LPAZ' and a1.cfreq=0.25 and a2.cfreq=0.5 and a3.cfreq=1 and a4.cfreq=2 and a5.cfreq=4
 and r.arid in (select a.arid from reb.assoc l, reb.arrival la, idcx.arrival a where a.arid=l.arid and l.arid=la.arid and abs(a.time - la.time) <= 2 and l.phase in ('Sn', 'Lg', 'Rg') and l.sta='LPAZ' and l.lddate > sysdate - 730) 
-order by r.time
+order by r.time;
 
-19 rows selected
+--19 rows selected
 
-#Query3: select all teleseismic P phases from leb.assoc that are not retimed by more than 2 seconds (for LPAZ and for roughly the last 2 years)
-select a.arid from leb.assoc l, leb.arrival la, idcx.arrival a where a.arid=l.arid and l.arid=la.arid and abs(a.time - la.time) <= 2 and l.phase in ('P', 'PKP', 'PKPbc', 'PcP', 'PKPab', 'pP', 'PP', 'PKKPbc', 'ScP', 'SKPbc', 'PKhKP', 'PKiKP', 'PKP2', 'Pdiff', 'SKP', 'pPKP', 'PKKPab', 'pPKPbc', 'PKKP', 'SKKPbc', 'PKP2bc', 'P3KPbc', 'sP', 'SKPab', 'P4KPbc', 'PKP2ab', 'pPKPab', 'P3KP', 'SKKP', 'SKiKP', 'SKKPab', 'SKKS', 'P4KP', 'SP') and l.sta='LPAZ' and l.lddate > sysdate - 730;   
+-- Query3: select all teleseismic P phases from leb.assoc that are not retimed by more than 2 seconds (for LPAZ and for roughly the last 2 years)
+select a.arid 
+from leb.assoc l, leb.arrival la, idcx.arrival a 
+where a.arid=l.arid 
+ and l.arid=la.arid 
+ and abs(a.time - la.time) <= 2 
+ and l.phase in ('P', 'PKP', 'PKPbc', 'PcP', 'PKPab', 'pP', 'PP', 'PKKPbc', 'ScP', 'SKPbc', 'PKhKP', 'PKiKP', 'PKP2', 'Pdiff', 'SKP', 'pPKP', 'PKKPab', 'pPKPbc', 'PKKP', 'SKKPbc', 'PKP2bc', 'P3KPbc', 'sP', 'SKPab', 'P4KPbc', 'PKP2ab', 'pPKPab', 'P3KP', 'SKKP', 'SKiKP', 'SKKPab', 'SKKS', 'P4KP', 'SP') 
+ and l.sta='LPAZ' and l.lddate > sysdate - 730;   
 
-6830 rows selected.
+--6830 rows selected.
 
-#Plug into Radek s query to from part 3 of the dataset
+--Plug into Radek s query to from part 3 of the dataset
 select r.sta, r.arid, r.time, r.iphase, r.per, ap.rect, ap.plans, ap.inang1, ap.inang3, ap.hmxmn, ap.hvratp, ap.hvrat, a1.htov "htov1", a2.htov "htov2", a3.htov "htov3", a4.htov "htov4", a5.htov "htov5" 
-from 
-     reb.arrival r join reb.apma ap on r.arid=ap.arid 
+from reb.arrival r join reb.apma ap on r.arid=ap.arid 
 join reb.amp3c a1 on r.arid=a1.arid 
 join reb.amp3c a2 on r.arid=a2.arid 
 join reb.amp3c a3 on r.arid=a3.arid 
@@ -285,19 +298,19 @@ join reb.amp3c a4 on r.arid=a4.arid
 join reb.amp3c a5 on r.arid=a5.arid 
 where r.sta='LPAZ' and a1.cfreq=0.25 and a2.cfreq=0.5 and a3.cfreq=1 and a4.cfreq=2 and a5.cfreq=4
 and r.arid in (select a.arid from leb.assoc l, leb.arrival la, idcx.arrival a where a.arid=l.arid and l.arid=la.arid and abs(a.time - la.time) <= 2 and l.phase in ('P', 'PKP', 'PKPbc', 'PcP', 'PKPab', 'pP', 'PP', 'PKKPbc', 'ScP', 'SKPbc', 'PKhKP', 'PKiKP', 'PKP2', 'Pdiff', 'SKP', 'pPKP', 'PKKPab', 'pPKPbc', 'PKKP', 'SKKPbc', 'PKP2bc', 'P3KPbc', 'sP', 'SKPab', 'P4KPbc', 'PKP2ab', 'pPKPab', 'P3KP', 'SKKP', 'SKiKP', 'SKKPab', 'SKKS', 'P4KP', 'SP') and l.sta='LPAZ') 
-order by r.time 
+order by r.time; 
 
-6632 rows selected
+--6632 rows selected
 
-#Query4: arids all arrivals automatically categorized as noise that do not get associated by analysts (for LPAZ and for roughly the last 2 years) - should go into the training dataset
+--Query4: arids all arrivals automatically categorized as noise that do not get associated by analysts (for LPAZ and for roughly the last 2 years) - should go into the training dataset
 select a.arid from idcx.arrival a where a.iphase='N' and a.sta='LPAZ' and a.lddate > sysdate - 730 and a.arid not in (select distinct arid from leb.assoc);
 
-34560 rows selected.
+--34560 rows selected.
 
-#form part 4 of the training dataset
+--form part 4 of the training dataset
 select r.sta, r.arid, r.time, r.iphase, r.per, ap.rect, ap.plans, ap.inang1, ap.inang3, ap.hmxmn, ap.hvratp, ap.hvrat, a1.htov "htov1", a2.htov "htov2", a3.htov "htov3", a4.htov "htov4", a5.htov "htov5" 
-from 
-     idcx.arrival r join idcx.apma ap on r.arid=ap.arid 
+from idcx.arrival r 
+join idcx.apma  ap on r.arid=ap.arid 
 join idcx.amp3c a1 on r.arid=a1.arid 
 join idcx.amp3c a2 on r.arid=a2.arid 
 join idcx.amp3c a3 on r.arid=a3.arid 
@@ -305,15 +318,16 @@ join idcx.amp3c a4 on r.arid=a4.arid
 join idcx.amp3c a5 on r.arid=a5.arid
 where r.sta='LPAZ' and a1.cfreq=0.25 and a2.cfreq=0.5 and a3.cfreq=1 and a4.cfreq=2 and a5.cfreq=4 and 
 r.iphase='N' and r.lddate > sysdate - 730 and r.arid not in (select distinct arid from leb.assoc)
-order by r.time
+order by r.time;
 
-34547 rows selected
+--34547 rows selected
 
-# to what do arrivals automatically categorized as noise at LPAZ get changed, when analysts do associate them? 
+--to what do arrivals automatically categorized as noise at LPAZ get changed, when analysts do associate them? 
 
 #select all arrivals automatically categorized as noise that do get changed to another phase by analysts (for LPAZ and for roughly the last 2 years)
 select la.phase, count(*) from leb.assoc la, idcx.arrival a where a.iphase='N' and la.arid=a.arid and a.sta='LPAZ' and a.lddate > sysdate - 730 and a.arid in (select distinct arid from leb.assoc) group by la.phase;
 
+/*
 PHASE	   COUNT(*)
 -------- ----------
 pPKP		  1
@@ -335,5 +349,6 @@ Lg		  8
 SKP		  1
 
 17 rows selected. 
+*/
 
 select amp.arid, count(amp.cfreq) from reb.amp3c amp, reb.assoc ass where ass.sta='LPAZ' and ass.arid=amp.arid group by amp.arid
