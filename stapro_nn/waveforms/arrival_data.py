@@ -3,7 +3,6 @@ import cx_Oracle
 from dbtools import exec_query, get_connection
 
 
-
 REG_P = ('Pn', 'Pg')
 REG_S = ('Sn', 'Lg', 'Rg')
 TEL_P = ('P', 'PKP', 'PKPbc', 'PcP', 'PKPab', 'pP', 'PP', 'PKKPbc', 'ScP', 'SKPbc',

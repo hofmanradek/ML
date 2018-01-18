@@ -1,16 +1,14 @@
--- custom type for storing arrays of floats
-create or replace type floatArray as varray(400) of binary_float;
+XXXXXXXXXXXXXXXXXXXXXXXXX
 
+/* sagety comment:)
 -- continue on error
 WHENEVER SQLERROR CONTINUE;
 DROP INDEX IDX_ML_FEATURES_TIME;
 DROP INDEX IDX_ML_FEATURES_CONTEX_T;
-DROP TABLE ML_WAVEFORMS;
 DROP TABLE ML_FEATURES;
-DROP TABLE ML_FEATURES_CONTEXTUAL;
 -- exit on error from now on
 WHENEVER SQLERROR EXIT FAILURE;
-
+*/
 
 CREATE TABLE ML_FEATURES
 ( 
@@ -68,24 +66,6 @@ COMMENT ON COLUMN ML_FEATURES.HTOV2 IS 'horozintal to vertical power ratio in an
 COMMENT ON COLUMN ML_FEATURES.HTOV3 IS 'horozintal to vertical power ratio in an octave frequencey band centered as 1Hz';
 COMMENT ON COLUMN ML_FEATURES.HTOV4 IS 'horozintal to vertical power ratio in an octave frequencey band centered as 2Hz';
 COMMENT ON COLUMN ML_FEATURES.HTOV5 IS 'horozintal to vertical power ratio in an octave frequencey band centered as 4Hz';
-
-CREATE TABLE ML_WAVEFORMS
-(
-  WAVEFORMID        NUMBER(10,0) NOT NULL,
-  ARID              NUMBER(10,0) NOT NULL,
-  STA               VARCHAR2(8) NOT NULL,
-  CHAN              VARCHAR2(8) NOT NULL,  
-  SAMPRATE          FLOAT(24)   NOT NULL,
-  STARTTIME         FLOAT(53)  NOT NULL,
-  ENDTIME           FLOAT(53)  NOT NULL,
-  NSAMP             NUMBER(8),
-  SAMPLES           floatArray, --calibrated
-  FILTSAMPLES       floatArray, --calibrated and filtered by passband filter between FILTLO, FILTHI
-  FILTLO            FLOAT(24),         
-  FILTHI            FLOAT(24),  
-  CONSTRAINT ML_WAVEFORM_PK PRIMARY KEY (WAVEFORMID),
-  CONSTRAINT FK_ML_FEATURE FOREIGN KEY (ARID) REFERENCES ML_FEATURES (ARID)
-) ENABLE PRIMARY KEY USING INDEX;
 
 
 --------------------------------------------------------------------------------------------------------------------------------
@@ -346,10 +326,43 @@ UPDATE ML_FEATURES a SET (a.NAB, a.TAB) = (SELECT b.NAB, b.TAB from ML_FEATURES_
 
 -- check size of tables...
 select segment_name, bytes/1024/1024||' MB' from user_segments where segment_type='TABLE' and segment_name like 'ML%';
+select sum(bytes)/1024/1024||' MB' from user_segments;
 
+-- sanity check
+select cphase, count(cphase) 
+from ML_FEATURES 
+where (per is NULL) 
+      or (slow is NULL) 
+      or (rect is NULL) 
+      or (plans is NULL) 
+      or (inang1 is NULL) 
+      or (inang3 is NULL) 
+      or (hmxmn is NULL) 
+      or (hvratp is NULL) 
+      or (hvrat is NULL) 
+      or (nab is NULL) 
+      or (tab is NULL) 
+      or (htov1 is NULL) 
+      or (htov2 is NULL) 
+      or (htov3 is NULL) 
+      or (htov4 is NULL) 
+      or (htov5 is NULL)       
+group by cphase;
+-- 84 rows returned, all from automatic
+/*
+CPHASE   COUNT(CPHASE)
+-------- -------------
+P                    7
+T                   76
+S                    1
+*/
+
+delete from ML_FEATURES where (htov1 is NULL) or (htov2 is NULL) or (htov3 is NULL) or (htov4 is NULL) or (htov5 is NULL);
+-- 84 rows deleted
 
 -- grant select to public
 GRANT SELECT ON HOFMAN.ML_FEATURES TO PUBLIC;
+
 
 --------------------------------------------
 -- SOME VERIFICATION OF CONTEXTUAL FATURES
@@ -425,6 +438,90 @@ TAB = (TAFTER/NAFTER - TBEFORE/NBEFORE)/100 = -0.07925 ~ -0.08 OK
 */
 
 
+---------------------------------------------------------------------------------------------------------------------------------
+------ ML_WAVEFORMS TABLE
+---------------------------------------------------------------------------------------------------------------------------------
+
+-- prepare sequence and triggers for generating IDs of waveforms
 
 
 
+WHENEVER SQLERROR CONTINUE; -- continue on error
+
+DROP SEQUENCE SEQ_WAVEFORM_ID;
+DROP TABLE ML_WAVEFORMS;
+
+WHENEVER SQLERROR EXIT FAILURE; -- exit on error from now on 
+
+-- sequence for waveform id
+CREATE SEQUENCE SEQ_WAVEFORM_ID START WITH 1000 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- table to keep waveforms in
+CREATE TABLE ML_WAVEFORMS
+(
+  WAVEFORMID        NUMBER(10,0) NOT NULL,
+  ARID              NUMBER(10,0) NOT NULL,
+  STA               VARCHAR2(8) NOT NULL,
+  CHAN              VARCHAR2(8) NOT NULL,  
+  SAMPRATE          FLOAT(24),
+  STARTTIME         FLOAT(53),
+  ENDTIME           FLOAT(53),
+  NSAMP             NUMBER(8),
+  CALIB             FLOAT(24),
+  SAMPLES           varchar2(3200), --calibrated up to 400 4byte float samples in hex representation - because of DB encoding..
+  CONSTRAINT ML_WAVEFORM_PK PRIMARY KEY (WAVEFORMID),
+  CONSTRAINT FK_ML_FEATURE FOREIGN KEY (ARID) REFERENCES ML_FEATURES (ARID)
+) ENABLE PRIMARY KEY USING INDEX;
+
+-- use in a trigger to autoincrement the sequence
+CREATE OR REPLACE TRIGGER WAVEFORM_ID_INCREMENT
+BEFORE INSERT ON ML_WAVEFORMS
+FOR EACH ROW
+BEGIN
+  SELECT SEQ_WAVEFORM_ID.NEXTVAL
+  INTO   :new.WAVEFORMID
+  FROM   dual;
+END;
+/
+
+
+--we prepare rows where waveforms will be filled later by a python code
+INSERT INTO ML_WAVEFORMS (ARID, STA, CHAN, SAMPRATE, STARTTIME, ENDTIME, NSAMP, CALIB, SAMPLES)
+(SELECT a.ARID, a.STA, b.CHAN, NULL, NULL, NULL, NULL, NULL, NULL 
+from ML_FEATURES a
+join static.sitechan@extadb b on a.sta=b.sta
+where b.sta='LPAZ' 
+and cphase='S'
+and b.chan in ('BHE','BHN','BHZ'));
+
+/*
+SELECT DISTINCT i.chan 
+FROM static.stanet@extadb s 
+JOIN static.sitechan@extadb i 
+ON s.sta=i.sta 
+WHERE i.chan IN ('BDF','BH1','BH2','BHE','BHN','BHZ','EDH','EDE','EHN',
+                 'EHZ','HHE','HHN','HHZ','MH1','MH2','MHE','MHN','MHZ',
+                 'SH1','SH2','SHE','SHN','SHZ') AND 
+s.net='LPAZ' 
+ORDER BY i.chan;
+*/
+
+COMMIT;
+
+
+select count(*) from ML_FEATURES;
+select count(*) from ML_WAVEFORMS;
+
+
+PURGE TABLE ML_WAVEFORMS;
+
+
+alter table
+   ML_WAVEFORMS
+modify
+(
+   samples   varchar2(4000)
+);
+
+
+desc ML_WAVEFORMS;
