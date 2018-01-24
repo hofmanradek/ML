@@ -17,8 +17,9 @@ CREATE TABLE ML_FEATURES
   STA               VARCHAR2(8) NOT NULL,  
   TIME              FLOAT(53)  NOT NULL,  
   IPHASE            VARCHAR2(8), -- iwt
-  CPHASE            VARCHAR2(8) NOT NULL, -- phase faimly - N, regP, regS and T (telP, telS..)
+  CPHASE_IPHASE     VARCHAR2(8),
   PHASE             VARCHAR2(8),  -- phase as in LEB assoc
+  CPHASE_PHASE      VARCHAR2(8) NOT NULL, -- phase faimly - N, regP, regS and T (telP, telS..)
   RETIME            FLOAT(24) NOT NULL,
   SOURCE            VARCHAR2(1), -- A - automatic phase family type remained after association, H - automatic phase family changed by analyst, M - manually added by analysts
   PER               FLOAT(24), ---arrival features follow
@@ -36,19 +37,24 @@ CREATE TABLE ML_FEATURES
   HTOV2             FLOAT(24),
   HTOV3             FLOAT(24),
   HTOV4             FLOAT(24),
-  HTOV5             FLOAT(24),  
+  HTOV5             FLOAT(24),
   CONSTRAINT ML_FEATURE_PK PRIMARY KEY (ARID)
 ) ENABLE PRIMARY KEY USING INDEX;
 
 --create index on time of ML_FEATURES
 CREATE INDEX IDX_ML_FEATURES_TIME ON ML_FEATURES(TIME);
+CREATE INDEX IDX_ML_FEATURES_STA ON ML_FEATURES(STA);
+
+ALTER INDEX IDX_ML_FEATURES_TIME REBUILD;
+ALTER INDEX IDX_ML_FEATURES_STA REBUILD;
 
 COMMENT ON COLUMN ML_FEATURES.ARID IS 'arrival id';
 COMMENT ON COLUMN ML_FEATURES.STA IS 'station';
 COMMENT ON COLUMN ML_FEATURES.TIME IS 'arrival time (sec)';
 COMMENT ON COLUMN ML_FEATURES.IPHASE IS 'initial wave type guessed by StaPro';
-COMMENT ON COLUMN ML_FEATURES.PHASE IS 'phase assigned by analyst';
-COMMENT ON COLUMN ML_FEATURES.CPHASE IS 'phase family class for iwt: N - noise; P - reg P; S - reg S; T - teleseismic PS';
+COMMENT ON COLUMN ML_FEATURES.CPHASE_IPHASE IS 'phase family class for iwt: N - noise; P - reg P; S - reg S; T - teleseismic PS';
+COMMENT ON COLUMN ML_FEATURES.PHASE IS 'final phase assigned by an analyst';
+COMMENT ON COLUMN ML_FEATURES.CPHASE_PHASE IS 'phase family class for final phase assigned by an analyst: N - noise; P - reg P; S - reg S; T - teleseismic PS';
 COMMENT ON COLUMN ML_FEATURES.RETIME IS 'retiming ni sec';
 COMMENT ON COLUMN ML_FEATURES.SOURCE IS 'A - automatic and arrival.iphase in the same phase family as assoc.phase, H - automatic and arrival.iphase not in the same phase family as assoc.phase, M - manually added by analyst';
 COMMENT ON COLUMN ML_FEATURES.PER IS 'signal period';
@@ -67,6 +73,7 @@ COMMENT ON COLUMN ML_FEATURES.HTOV2 IS 'horozintal to vertical power ratio in an
 COMMENT ON COLUMN ML_FEATURES.HTOV3 IS 'horozintal to vertical power ratio in an octave frequencey band centered as 1Hz';
 COMMENT ON COLUMN ML_FEATURES.HTOV4 IS 'horozintal to vertical power ratio in an octave frequencey band centered as 2Hz';
 COMMENT ON COLUMN ML_FEATURES.HTOV5 IS 'horozintal to vertical power ratio in an octave frequencey band centered as 4Hz';
+COMMENT ON COLUMN ML_FEATURES.HTOV5 IS 'horozintal to vertical power ratio in an octave frequencey band centered as 4Hz';
 
 
 --------------------------------------------------------------------------------------------------------------------------------
@@ -81,8 +88,8 @@ select r.arid "arid", r.sta "sta", r.time "time", r.iphase "iphase", 'S' "cphase
 (select htov from idcx.amp3c@extadb where  arid=r.arid and cfreq=2) as htov4,
 (select htov from idcx.amp3c@extadb where  arid=r.arid and cfreq=4) as htov5
 from idcx.arrival@extadb r join idcx.apma@extadb ap on r.arid=ap.arid join leb.assoc@extadb ass on ass.arid=r.arid join leb.arrival@extadb larr on larr.arid=r.arid
-where r.sta='LPAZ' and r.iphase in  ('Sn', 'Lg', 'Rg', 'Sx') and ass.phase in  ('Sn', 'Lg', 'Rg') and abs(r.time - larr.time) <= 4
-order by r.time; --174
+where r.sta='URZ' and r.iphase in  ('Sn', 'Lg', 'Rg', 'Sx') and ass.phase in  ('Sn', 'Lg', 'Rg') and abs(r.time - larr.time) <= 4
+order by r.time; --5,151 rows inserted.
 
 
 -------- regional S where phase from automatic where iphase was not in  ('Sn', 'Lg', 'Rg')
@@ -95,8 +102,8 @@ select r.arid "arid", r.sta "sta", r.time "time", r.iphase "iphase", 'S' "cphase
 (select htov from idcx.amp3c@extadb where  arid=r.arid and cfreq=2) as htov4,
 (select htov from idcx.amp3c@extadb where  arid=r.arid and cfreq=4) as htov5
 from idcx.arrival@extadb r join idcx.apma@extadb ap on r.arid=ap.arid join leb.assoc@extadb ass on ass.arid=r.arid join leb.arrival@extadb larr on larr.arid=r.arid
-where r.sta='LPAZ' and r.iphase not in  ('Sn', 'Lg', 'Rg', 'Sx') and ass.phase in  ('Sn', 'Lg', 'Rg') and abs(r.time - larr.time) <= 4
-order by r.time; --465
+where r.sta='URZ' and r.iphase not in  ('Sn', 'Lg', 'Rg', 'Sx') and ass.phase in  ('Sn', 'Lg', 'Rg') and abs(r.time - larr.time) <= 4
+order by r.time; --4,055 rows inserted.
 
 
 ------ regional S manually added by analysts - arid not existing in idcx.arrival
@@ -111,7 +118,7 @@ join leb.amp3c@extadb a2 on r.arid=a2.arid
 join leb.amp3c@extadb a3 on r.arid=a3.arid 
 join leb.amp3c@extadb a4 on r.arid=a4.arid 
 join leb.amp3c@extadb a5 on r.arid=a5.arid 
-where r.sta='LPAZ' 
+where r.sta='URZ' 
 and a1.cfreq=0.25 
 and a2.cfreq=0.5 
 and a3.cfreq=1 
@@ -119,10 +126,10 @@ and a4.cfreq=2
 and a5.cfreq=4 
 and ass.phase in  ('Sn', 'Lg', 'Rg')
 and r.arid not in (select distinct arid from idcx.arrival@extadb)
-order by r.time; --652
+order by r.time; --2,002 rows inserted.
 
 
-select count(*) from ml_features where cphase='S'; --1291
+select count(*) from ml_features where cphase='S' and sta='URZ'; --11208
 
 --------------------------------------------------------------------------------------------------------------------------------
 ----- regional P phases automatic
@@ -136,8 +143,8 @@ select r.arid "arid", r.sta "sta", r.time "time", r.iphase "iphase", 'P' "cphase
 (select htov from idcx.amp3c@extadb where  arid=r.arid and cfreq=2) as htov4,
 (select htov from idcx.amp3c@extadb where  arid=r.arid and cfreq=4) as htov5
 from idcx.arrival@extadb r join idcx.apma@extadb ap on r.arid=ap.arid join leb.assoc@extadb ass on ass.arid=r.arid join leb.arrival@extadb larr on larr.arid=r.arid
-where r.sta='LPAZ' and r.iphase in ('Pn', 'Pg', 'Px') and ass.phase in ('Pn', 'Pg') and abs(r.time - larr.time) <= 4
-order by r.time; --2512
+where r.sta='URZ' and r.iphase in ('Pn', 'Pg', 'Px') and ass.phase in ('Pn', 'Pg') and abs(r.time - larr.time) <= 4
+order by r.time; --6,969 rows inserted.
 
 -------- regional P where phase from automatic where iphase was not in ('Pn', 'Pg')
 insert into ML_FEATURES
@@ -149,8 +156,8 @@ select r.arid "arid", r.sta "sta", r.time "time", r.iphase "iphase", 'P' "cphase
 (select htov from idcx.amp3c@extadb where  arid=r.arid and cfreq=2) as htov4,
 (select htov from idcx.amp3c@extadb where  arid=r.arid and cfreq=4) as htov5
 from idcx.arrival@extadb r join idcx.apma@extadb ap on r.arid=ap.arid join leb.assoc@extadb ass on ass.arid=r.arid join leb.arrival@extadb larr on larr.arid=r.arid
-where r.sta='LPAZ' and r.iphase not in ('Pn', 'Pg', 'Px') and ass.phase in ('Pn', 'Pg') and abs(r.time - larr.time) <= 4
-order by r.time; --4149
+where r.sta='URZ' and r.iphase not in ('Pn', 'Pg', 'Px') and ass.phase in ('Pn', 'Pg') and abs(r.time - larr.time) <= 4
+order by r.time; --2,474 rows inserted.
 
 ------------------it gets 6661 in total if we do not want that it was reg P even before
 
@@ -166,7 +173,7 @@ join leb.amp3c@extadb a2 on r.arid=a2.arid
 join leb.amp3c@extadb a3 on r.arid=a3.arid 
 join leb.amp3c@extadb a4 on r.arid=a4.arid 
 join leb.amp3c@extadb a5 on r.arid=a5.arid 
-where r.sta='LPAZ' 
+where r.sta='URZ' 
 and a1.cfreq=0.25 
 and a2.cfreq=0.5 
 and a3.cfreq=1 
@@ -174,10 +181,10 @@ and a4.cfreq=2
 and a5.cfreq=4 
 and ass.phase in ('Pn', 'Pg')
 and r.arid not in (select distinct arid from idcx.arrival@extadb)
-order by r.time; --574
+order by r.time; --2,387 rows inserted.
 
 
-select count(*) from ml_features where cphase='P'; --7235
+select count(*) from ml_features where cphase='P' and sta='URZ'; --11830
 
 --------------------------------------------------------------------------------------------------------------------------------
 ----- T teleseismic phases (both P and S)
@@ -192,11 +199,11 @@ select r.arid "arid", r.sta "sta", r.time "time", r.iphase "iphase", 'T' "cphase
 (select htov from idcx.amp3c@extadb where  arid=r.arid and cfreq=2) as htov4,
 (select htov from idcx.amp3c@extadb where  arid=r.arid and cfreq=4) as htov5
 from idcx.arrival@extadb r join idcx.apma@extadb ap on r.arid=ap.arid join leb.assoc@extadb ass on ass.arid=r.arid join leb.arrival@extadb larr on larr.arid=r.arid
-where r.sta='LPAZ' 
+where r.sta='URZ' 
 and r.iphase in ('P', 'PKP', 'PKPbc', 'PcP', 'PKPab', 'pP', 'PP', 'PKKPbc', 'ScP', 'SKPbc', 'PKhKP', 'PKiKP', 'PKP2', 'Pdiff', 'SKP', 'pPKP', 'PKKPab', 'pPKPbc', 'PKKP', 'SKKPbc', 'PKP2bc', 'P3KPbc', 'sP', 'SKPab', 'P4KPbc', 'PKP2ab', 'pPKPab', 'P3KP', 'SKKP', 'SKiKP', 'SKKPab', 'SKKS', 'P4KP', 'SP', 'S', 'ScS', 'SS', 'Sdiff', 'pPcP', 'sPKP', 'tx') 
 and ass.phase in ('P', 'PKP', 'PKPbc', 'PcP', 'PKPab', 'pP', 'PP', 'PKKPbc', 'ScP', 'SKPbc', 'PKhKP', 'PKiKP', 'PKP2', 'Pdiff', 'SKP', 'pPKP', 'PKKPab', 'pPKPbc', 'PKKP', 'SKKPbc', 'PKP2bc', 'P3KPbc', 'sP', 'SKPab', 'P4KPbc', 'PKP2ab', 'pPKPab', 'P3KP', 'SKKP', 'SKiKP', 'SKKPab', 'SKKS', 'P4KP', 'SP', 'S', 'ScS', 'SS', 'Sdiff', 'pPcP', 'sPKP')
 and abs(r.time - larr.time) <= 4
-order by r.time; --54,966 rows inserted.
+order by r.time; --14,050 rows inserted.
 
 -------- T where phase from automatic where iphase was not in ('P', 'PKP', 'PKPbc', 'PcP', 'PKPab', 'pP', 'PP', 'PKKPbc', 'ScP', 'SKPbc', 'PKhKP', 'PKiKP', 'PKP2', 'Pdiff', 'SKP', 'pPKP', 'PKKPab', 'pPKPbc', 'PKKP', 'SKKPbc', 'PKP2bc', 'P3KPbc', 'sP', 'SKPab', 'P4KPbc', 'PKP2ab', 'pPKPab', 'P3KP', 'SKKP', 'SKiKP', 'SKKPab', 'SKKS', 'P4KP', 'SP', 'S', 'ScS', 'SS', 'Sdiff', 'pPcP', 'sPKP')
 insert into ML_FEATURES
@@ -208,11 +215,11 @@ select r.arid "arid", r.sta "sta", r.time "time", r.iphase "iphase", 'T' "cphase
 (select htov from idcx.amp3c@extadb where  arid=r.arid and cfreq=2) as htov4,
 (select htov from idcx.amp3c@extadb where  arid=r.arid and cfreq=4) as htov5
 from idcx.arrival@extadb r join idcx.apma@extadb ap on r.arid=ap.arid join leb.assoc@extadb ass on ass.arid=r.arid join leb.arrival@extadb larr on larr.arid=r.arid
-where r.sta='LPAZ' 
+where r.sta='URZ' 
 and r.iphase not in ('P', 'PKP', 'PKPbc', 'PcP', 'PKPab', 'pP', 'PP', 'PKKPbc', 'ScP', 'SKPbc', 'PKhKP', 'PKiKP', 'PKP2', 'Pdiff', 'SKP', 'pPKP', 'PKKPab', 'pPKPbc', 'PKKP', 'SKKPbc', 'PKP2bc', 'P3KPbc', 'sP', 'SKPab', 'P4KPbc', 'PKP2ab', 'pPKPab', 'P3KP', 'SKKP', 'SKiKP', 'SKKPab', 'SKKS', 'P4KP', 'SP', 'S', 'ScS', 'SS', 'Sdiff', 'pPcP', 'sPKP', 'tx')
 and ass.phase in ('P', 'PKP', 'PKPbc', 'PcP', 'PKPab', 'pP', 'PP', 'PKKPbc', 'ScP', 'SKPbc', 'PKhKP', 'PKiKP', 'PKP2', 'Pdiff', 'SKP', 'pPKP', 'PKKPab', 'pPKPbc', 'PKKP', 'SKKPbc', 'PKP2bc', 'P3KPbc', 'sP', 'SKPab', 'P4KPbc', 'PKP2ab', 'pPKPab', 'P3KP', 'SKKP', 'SKiKP', 'SKKPab', 'SKKS', 'P4KP', 'SP', 'S', 'ScS', 'SS', 'Sdiff', 'pPcP', 'sPKP')
 and abs(r.time - larr.time) <= 4
-order by r.time; --23,143
+order by r.time; --17,493 rows inserted.
 
 ------------------it gets 6661 in total if we do not want that it was reg P even before
 
@@ -228,7 +235,7 @@ join leb.amp3c@extadb a2 on r.arid=a2.arid
 join leb.amp3c@extadb a3 on r.arid=a3.arid 
 join leb.amp3c@extadb a4 on r.arid=a4.arid 
 join leb.amp3c@extadb a5 on r.arid=a5.arid 
-where r.sta='LPAZ' 
+where r.sta='URZ' 
 and a1.cfreq=0.25 
 and a2.cfreq=0.5 
 and a3.cfreq=1 
@@ -236,14 +243,14 @@ and a4.cfreq=2
 and a5.cfreq=4 
 and ass.phase in ('P', 'PKP', 'PKPbc', 'PcP', 'PKPab', 'pP', 'PP', 'PKKPbc', 'ScP', 'SKPbc', 'PKhKP', 'PKiKP', 'PKP2', 'Pdiff', 'SKP', 'pPKP', 'PKKPab', 'pPKPbc', 'PKKP', 'SKKPbc', 'PKP2bc', 'P3KPbc', 'sP', 'SKPab', 'P4KPbc', 'PKP2ab', 'pPKPab', 'P3KP', 'SKKP', 'SKiKP', 'SKKPab', 'SKKS', 'P4KP', 'SP', 'S', 'ScS', 'SS', 'Sdiff', 'pPcP', 'sPKP')
 and r.arid not in (select distinct arid from idcx.arrival@extadb)
-order by r.time; --9,906 
+order by r.time; -- 
 
 
-select count(*) from ml_features where cphase='T'; --88015
+select count(*) from ml_features where cphase='T' and sta='URZ'; --6,571 rows inserted.
 
 
 --------------------------------------------------------------------------------------------------------------------------------
------ N phases - identified as N by autiomatic and not associated by analysts
+----- N phases - identified as N by automatic and not associated by analysts
 --------------------------------------------------------------------------------------------------------------------------------
 insert into ML_FEATURES 
 select r.arid "arid", r.sta "sta", r.time "time", r.iphase "iphase", 'N' "cphase", NULL "phase", 0 "retime", 'A' "source", r.per "per", r.slow "slow", ap.rect "rect", ap.plans "plans",
@@ -255,7 +262,7 @@ join idcx.amp3c@extadb a2 on r.arid=a2.arid
 join idcx.amp3c@extadb a3 on r.arid=a3.arid 
 join idcx.amp3c@extadb a4 on r.arid=a4.arid 
 join idcx.amp3c@extadb a5 on r.arid=a5.arid
-where r.sta='LPAZ' 
+where r.sta='URZ' 
 and a1.cfreq=0.25 
 and a2.cfreq=0.5 
 and a3.cfreq=1 
@@ -263,16 +270,16 @@ and a4.cfreq=2
 and a5.cfreq=4 
 and r.iphase='N' 
 and r.arid not in (select distinct arid from leb.assoc@extadb)
-order by r.time; --309,840
+order by r.time; --308,706 rows inserted.
 
 
-select count(*) from ml_features where cphase='N'; --88015
+select count(*) from ml_features where cphase='N' and sta='URZ'; --
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-select cphase "class phase", count(cphase) "#" from ml_features where source in ('A') and cphase in ('P', 'S', 'T', 'N') and retime<2 group by cphase;
-select cphase "class phase", count(cphase) "#" from ml_features where source in ('A', 'M') and cphase in ('P', 'S', 'T', 'N') and retime<2 group by cphase;
-select cphase "class phase", count(cphase) "#" from ml_features where source in ('A', 'H', 'M') and cphase in ('P', 'S', 'T', 'N') and retime<=0 group by cphase;
+select sta, cphase "class phase", count(cphase) "#" from ml_features where source in ('A') and cphase in ('P', 'S', 'T', 'N') and retime<2 group by cphase, sta order by sta, cphase;
+select sta, cphase "class phase", count(cphase) "#" from ml_features where source in ('A', 'M') and cphase in ('P', 'S', 'T', 'N') and retime<2 group by cphase, sta order by sta, cphase;
+select sta, cphase "class phase", count(cphase) "#" from ml_features where source in ('A', 'H', 'M') and cphase in ('P', 'S', 'T', 'N') and retime<=0 group by cphase, sta order by sta, cphase;
 
 
 ---------------------------------------------------------------------------------------------------
@@ -299,14 +306,24 @@ CREATE TABLE ML_FEATURES_CONTEXTUAL
 ) ENABLE PRIMARY KEY USING INDEX;
 
 CREATE INDEX IDX_ML_FEATURES_CONTEX_T ON ML_FEATURES_CONTEXTUAL(TIME);
+ALTER INDEX IDX_ML_FEATURES_CONTEX_T REBUILD;
 
 insert into ML_FEATURES_CONTEXTUAL
 select a.arid, a.time,
-       (select count(arid) from ML_FEATURES where abs(a.time-time)<=60 and time>a.time) "NAFTER",
-       (select count(arid) from ML_FEATURES where abs(a.time-time)<=60 and time<a.time) "NBEFORE",
-       (select sum(abs(time-a.time)) from ML_FEATURES where abs(a.time-time)<=60 and time>a.time) "TAFTER",
-       (select sum(abs(time-a.time)) from ML_FEATURES where abs(a.time-time)<=60 and time<a.time) "TBEFORE"
-from ML_features a;
+       (select count(arid) from ML_FEATURES where abs(a.time-time)<=60 and time>a.time and sta='URZ') "NAFTER",
+       (select count(arid) from ML_FEATURES where abs(a.time-time)<=60 and time<a.time and sta='URZ') "NBEFORE",
+       (select sum(abs(time-a.time)) from ML_FEATURES where abs(a.time-time)<=60 and time>a.time and sta='URZ') "TAFTER",
+       (select sum(abs(time-a.time)) from ML_FEATURES where abs(a.time-time)<=60 and time<a.time and sta='URZ') "TBEFORE",
+       NULL,
+       NULL
+from ML_features a where a.sta='URZ';
+
+commit;
+
+select count(*) from ml_features where sta='URZ';
+select count(*) from ml_features where sta='LPAZ';
+
+
 
 --add columns for NAB and TAB
 ALTER TABLE
@@ -317,12 +334,15 @@ ADD(
 );
 
 -- populate them
-UPDATE ML_FEATURES_CONTEXTUAL SET NAB = (NAFTER-NBEFORE)/10;
-UPDATE ML_FEATURES_CONTEXTUAL SET TAB =  (NVL(TAFTER/NULLIF(NAFTER,0), 0) - NVL(TBEFORE/NULLIF(NBEFORE,0), 0))/100;
+UPDATE ML_FEATURES_CONTEXTUAL SET NAB = (NAFTER-NBEFORE)/10 where arid in (select arid from ml_features where sta='URZ');
+UPDATE ML_FEATURES_CONTEXTUAL SET TAB =  (NVL(TAFTER/NULLIF(NAFTER,0), 0) - NVL(TBEFORE/NULLIF(NBEFORE,0), 0))/100 where arid in (select arid from ml_features where sta='URZ');
 
 -- now we plug the contextual features into to feature table
-UPDATE ML_FEATURES a SET (a.NAB, a.TAB) = (SELECT b.NAB, b.TAB from ML_FEATURES_CONTEXTUAL b WHERE a.arid=b.arid);
+UPDATE ML_FEATURES a SET (a.NAB, a.TAB) = (SELECT b.NAB, b.TAB from ML_FEATURES_CONTEXTUAL b WHERE a.arid=b.arid) where a.sta='URZ';
 --406,381 rows updated.
+
+select * from ml_features where sta='URZ';
+select distinct iphase from idcx.arrival@idcdev;
 
 
 -- check size of tables...
@@ -543,7 +563,7 @@ select * from ml_features where arid=77189604;
 select * from ml_waveforms where arid=77189604;
 
 
----------------------------COPY OFL ML_FEATURES WITHOUT Px, Sx and tx
+---------------------------COPY OF ML_FEATURES WITHOUT Px, Sx and tx
 create table ML_FEATURES_BCK as (select * from ML_FEATURES);
 select count(*) from ML_FEATURES_BCK; 
 COMMIT;
@@ -562,4 +582,26 @@ UPDATE ML_FEATURES SET source='A' where iphase in ('Px', 'Sx', 'tx');
 
 
 select * from ml_features where arid=64923837;
-select count(*) from ml_features where cphase=''
+
+
+select count(i.arid) from leb.arrival@extadb i, leb.assoc@extadb a where i.arid=a.arid and a.phase != i.iphase and i.sta='LPAZ' and a.arid not in (select arid from idcx.arrival@extadb where sta='LPAZ');
+select * from leb.arrival@extadb i, idcx.arrival@extadb a where i.arid=a.arid and a.iphase != i.iphase and i.sta='LPAZ';
+
+select distinct iphase from ml_features where source in ('A', 'H');
+select distinct iphase from ml_features where source in ('M');
+
+
+
+select cphase, count(cphase) from ml_features where sta='URZ' and source in ('A','M') group by cphase ;
+
+select cphase, count(cphase) from ml_features where sta='LPAZ' and source in ('A','M','H') group by cphase ;
+
+commit;
+
+
+----------------------------POPULATE CPHASE_IPHASE column
+
+UPDATE TABLE ML_FEATURES SET CPHASE_IPHASE = 'S' where IPHASE in ('Sn', 'Lg', 'Rg', 'Sx'); 
+UPDATE TABLE ML_FEATURES SET CPHASE_IPHASE = 'P' where IPHASE in ('Pn', 'Pg', 'Px'); 
+UPDATE TABLE ML_FEATURES SET CPHASE_IPHASE = 'T' where IPHASE in ('P', 'PKP', 'PKPbc', 'PcP', 'PKPab', 'pP', 'PP', 'PKKPbc', 'ScP', 'SKPbc', 'PKhKP', 'PKiKP', 'PKP2', 'Pdiff', 'SKP', 'pPKP', 'PKKPab', 'pPKPbc', 'PKKP', 'SKKPbc', 'PKP2bc', 'P3KPbc', 'sP', 'SKPab', 'P4KPbc', 'PKP2ab', 'pPKPab', 'P3KP', 'SKKP', 'SKiKP', 'SKKPab', 'SKKS', 'P4KP', 'SP', 'S', 'ScS', 'SS', 'Sdiff', 'pPcP', 'sPKP', 'tx');
+UPDATE TABLE ML_FEATURES SET CPHASE_IPHASE = 'N' where IPHASE='N'; 

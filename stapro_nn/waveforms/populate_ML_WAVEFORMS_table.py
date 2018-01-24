@@ -7,9 +7,11 @@ import struct
 import codecs
 import struct
 import matplotlib.pyplot as plt
+import sys
 
 
 def get_arrival_waveforms(connection, arid, chan=None):
+    #returns waveforms for all three channels for a given arrival
     query = "select * from ml_waveforms where arid=%d" % arid
     if chan:
         query += "and chan='%s'" % chan
@@ -36,13 +38,24 @@ def get_arrival_waveforms(connection, arid, chan=None):
 
 def get_all_arrivals(sta, cursor, query_app=""):
     #gets all arids available in ML_WAVEFORMS table
+    query = "select f.arid, f.time from ML_FEATURES f join ML_WAVEFORMS w on f.arid=w.arid where f.sta='%s'" % sta
+    query += " "+query_app
+    print(query)
+    ret = dbtools.exec_query(query, cursor)
+    #arrivals = ret.fetchall()
+    #return arrivals[:]
+    return cursor
+
+
+def get_all_arrivals1(sta, cursor, query_app=""):
+    #gets all arids available in ML_WAVEFORMS table
     query = "select arid, time from ML_FEATURES where sta='%s'" % sta
     query += " "+query_app
     print(query)
     ret = cursor.execute(query)
     #arrivals = ret.fetchall()
     #return arrivals[:]
-    return ret
+    return cursor
 
 
 def get_channels(arid, cursor):
@@ -83,67 +96,65 @@ def populate_ML_WAVEFORMS(connection_udb, connection_extadb, sta, query_app=""):
 
     print(cursor_udb.arraysize)
 
-    arrivals_cur = get_all_arrivals(sta, cursor_udb, query_app=query_app)
+    arrivals_curr = get_all_arrivals(sta, cursor_udb, query_app=query_app)
 
-    while True:
+    #while True:
 
-        arrivals = arrivals_cur.fetchmany()
-        if arrivals == ():
-            break
+    arrivals = arrivals_curr.fetchall()
 
-        print("Fetched %d arrivals" % len(arrivals))
+    print("Fetched %d arrivals" % len(arrivals))
 
-        samples_before = 80  # 2s before
-        samples_after  = 320  # 8s after
+    samples_before = 80  # 2s before
+    samples_after  = 320  # 8s after
 
-        time_before = 2.
-        time_after = 8.
+    time_before = 2.
+    time_after = 8.
 
-        for arid, time in arrivals:
-            #get channels for given arid
-            chans = get_channels(arid, cursor_udb)
-            print('Channels:', chans)
-            #get waveform for each channel
-            for chan in chans:
+    for arid, time in arrivals:
+        #get channels for given arid
+        chans = get_channels(arid, cursor_udb)
+        print('Channels:', chans)
+        #get waveform for each channel
+        for chan in chans:
 
-                chan = chan[0]
-                print('Processing chan %s for arid=%d' % (chan, arid))
-                #starttime = time - samples_before/samprate
-                #endtime = time + samples_after/samprate
-                starttime = time - time_before
-                endtime = time + time_after
+            chan = chan[0]
+            print('Processing chan %s for arid=%d' % (chan, arid))
+            #starttime = time - samples_before/samprate
+            #endtime = time + samples_after/samprate
+            starttime = time - time_before
+            endtime = time + time_after
 
-                data, samprate, calib_fact = read_wfdisc.get_waveform_data(sta,
-                                                         chan,
-                                                         starttime,
-                                                         endtime,
-                                                         cursor_extadb,
-                                                         calib=True)
+            data, samprate, calib_fact = read_wfdisc.get_waveform_data(sta,
+                                                     chan,
+                                                     starttime,
+                                                     endtime,
+                                                     cursor_extadb,
+                                                     calib=True)
 
-                data = list(data)
-                nsamp = len(data)
-                samples =  struct.pack('%sf' % nsamp, *data)
-                samples_hex = samples.hex()
-                query = """UPDATE ml_waveforms 
-                           SET samprate=:samprate,
-                               starttime=:starttime,
-                               endtime=:endtime,
-                               nsamp=:nsamp,
-                               samples=:samples,
-                               calib=:calib 
-                           WHERE arid=:arid
-                             AND chan=:chan
-                """
-                cursor_udb.execute(query, {'arid': arid,
-                                       'chan': chan,
-                                       'samprate': samprate,
-                                       'starttime': starttime,
-                                       'endtime': endtime,
-                                       'nsamp': nsamp,
-                                       'samples': samples_hex,
-                                       'calib': calib_fact})
+            data = list(data)
+            nsamp = len(data)
+            samples =  struct.pack('%sf' % nsamp, *data)
+            samples_hex = samples.hex()
+            query = """UPDATE ml_waveforms 
+                       SET samprate=:samprate,
+                           starttime=:starttime,
+                           endtime=:endtime,
+                           nsamp=:nsamp,
+                           samples=:samples,
+                           calib=:calib 
+                       WHERE arid=:arid
+                         AND chan=:chan
+            """
+            cursor_udb.execute(query, {'arid': arid,
+                                   'chan': chan,
+                                   'samprate': samprate,
+                                   'starttime': starttime,
+                                   'endtime': endtime,
+                                   'nsamp': nsamp,
+                                   'samples': samples_hex,
+                                   'calib': calib_fact})
 
-            connection_udb.commit()  # we commit after all channels for one arrival
+        connection_udb.commit()  # we commit after all channels for one arrival
 
 
     cursor_udb.close()
@@ -175,8 +186,9 @@ if __name__ == '__main__':
         connection_extadb = db.connect('hofman/%s@%s' % (dbpwd, 'extadb'))
 
 
-    populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and cphase='S'")
-    populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and cphase='P'")
-    populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and cphase='T'")
-    populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and cphase='N'")
+    #populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and cphase='S'")
+    #populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and cphase='P'")
+    populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and f.cphase='T' and w.samples is null and w.calib is null and f.source not in ('H')")
+    populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and f.cphase='N'")
     #test_extraction()
+
