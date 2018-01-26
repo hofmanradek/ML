@@ -52,10 +52,10 @@ COMMENT ON COLUMN ML_FEATURES.ARID IS 'arrival id';
 COMMENT ON COLUMN ML_FEATURES.STA IS 'station';
 COMMENT ON COLUMN ML_FEATURES.TIME IS 'arrival time (sec)';
 COMMENT ON COLUMN ML_FEATURES.IPHASE IS 'initial wave type guessed by StaPro';
-COMMENT ON COLUMN ML_FEATURES.CPHASE_IPHASE IS 'phase family class for iwt: N - noise; P - reg P; S - reg S; T - teleseismic PS';
+COMMENT ON COLUMN ML_FEATURES.CLASS_IPHASE IS 'phase family class for iwt: N - noise; regP - reg P; regS - reg S; tele - teleseismic';
 COMMENT ON COLUMN ML_FEATURES.PHASE IS 'final phase assigned by an analyst';
-COMMENT ON COLUMN ML_FEATURES.CPHASE_PHASE IS 'phase family class for final phase assigned by an analyst: N - noise; P - reg P; S - reg S; T - teleseismic PS';
-COMMENT ON COLUMN ML_FEATURES.RETIME IS 'retiming ni sec';
+COMMENT ON COLUMN ML_FEATURES.CLASS_PHASE IS 'phase family class for final phase assigned by an analyst: N - noise; regP - reg P; regS - reg S; tele - teleseismic';
+COMMENT ON COLUMN ML_FEATURES.RETIME IS 'retiming in sec';
 COMMENT ON COLUMN ML_FEATURES.SOURCE IS 'A - automatic and arrival.iphase in the same phase family as assoc.phase, H - automatic and arrival.iphase not in the same phase family as assoc.phase, M - manually added by analyst';
 COMMENT ON COLUMN ML_FEATURES.PER IS 'signal period';
 COMMENT ON COLUMN ML_FEATURES.SLOW IS 'signal slowness';
@@ -68,12 +68,12 @@ COMMENT ON COLUMN ML_FEATURES.HVRATP IS 'ratio of horizontal to vertical power';
 COMMENT ON COLUMN ML_FEATURES.HVRAT IS 'HVRATP measured at the time of the maximum three-component amplitude';
 COMMENT ON COLUMN ML_FEATURES.NAB IS 'difference between the number of arrivals before and after the arrival within 60 seconds (+-60) divided by 10';
 COMMENT ON COLUMN ML_FEATURES.TAB IS 'mean time difference between the arrival and those before and after it within 60 seconds (+-60) divided by 100';
-COMMENT ON COLUMN ML_FEATURES.HTOV1 IS 'horozintal to vertical power ratio in an octave frequencey band centered as 0.25Hz';
-COMMENT ON COLUMN ML_FEATURES.HTOV2 IS 'horozintal to vertical power ratio in an octave frequencey band centered as 0.5Hz';
-COMMENT ON COLUMN ML_FEATURES.HTOV3 IS 'horozintal to vertical power ratio in an octave frequencey band centered as 1Hz';
-COMMENT ON COLUMN ML_FEATURES.HTOV4 IS 'horozintal to vertical power ratio in an octave frequencey band centered as 2Hz';
-COMMENT ON COLUMN ML_FEATURES.HTOV5 IS 'horozintal to vertical power ratio in an octave frequencey band centered as 4Hz';
-COMMENT ON COLUMN ML_FEATURES.HTOV5 IS 'horozintal to vertical power ratio in an octave frequencey band centered as 4Hz';
+COMMENT ON COLUMN ML_FEATURES.HTOV1 IS 'horozintal to vertical power ratio in an octave frequencey band centered at 0.25Hz';
+COMMENT ON COLUMN ML_FEATURES.HTOV2 IS 'horozintal to vertical power ratio in an octave frequencey band centered at 0.5Hz';
+COMMENT ON COLUMN ML_FEATURES.HTOV3 IS 'horozintal to vertical power ratio in an octave frequencey band centered at 1Hz';
+COMMENT ON COLUMN ML_FEATURES.HTOV4 IS 'horozintal to vertical power ratio in an octave frequencey band centered at 2Hz';
+COMMENT ON COLUMN ML_FEATURES.HTOV5 IS 'horozintal to vertical power ratio in an octave frequencey band centered at 4Hz';
+COMMENT ON COLUMN ML_FEATURES.HTOV5 IS 'horozintal to vertical power ratio in an octave frequencey band centered at 4Hz';
 
 
 --------------------------------------------------------------------------------------------------------------------------------
@@ -350,7 +350,7 @@ select segment_name, bytes/1024/1024||' MB' from user_segments where segment_typ
 select sum(bytes)/1024/1024||' MB' from user_segments;
 
 -- sanity check
-select cphase, count(cphase) 
+select phase, count(phase) 
 from ML_FEATURES 
 where (per is NULL) 
       or (slow is NULL) 
@@ -368,7 +368,7 @@ where (per is NULL)
       or (htov3 is NULL) 
       or (htov4 is NULL) 
       or (htov5 is NULL)       
-group by cphase;
+group by phase;
 -- 84 rows returned, all from automatic
 /*
 CPHASE   COUNT(CPHASE)
@@ -457,7 +457,7 @@ TAFTER = abs(1512565156.650 - 1512565161.850) = 5.2
 NAB = (NAFTER-NBEFORE)/10 = 0 OK
 TAB = (TAFTER/NAFTER - TBEFORE/NBEFORE)/100 = -0.07925 ~ -0.08 OK
 */
-
+select arid, nab, tab from ml_features where arid=128200429;
 
 ---------------------------------------------------------------------------------------------------------------------------------
 ------ ML_WAVEFORMS TABLE
@@ -493,6 +493,18 @@ CREATE TABLE ML_WAVEFORMS
   CONSTRAINT ML_WAVEFORM_PK PRIMARY KEY (WAVEFORMID),
   CONSTRAINT FK_ML_FEATURE FOREIGN KEY (ARID) REFERENCES ML_FEATURES (ARID)
 ) ENABLE PRIMARY KEY USING INDEX;
+
+
+COMMENT ON COLUMN ML_WAVEFORMS.WAVEFORMID IS 'waveform id';
+COMMENT ON COLUMN ML_WAVEFORMS.ARID IS 'arrival id';
+COMMENT ON COLUMN ML_WAVEFORMS.STA IS 'station';
+COMMENT ON COLUMN ML_WAVEFORMS.CHAN IS 'channel';
+COMMENT ON COLUMN ML_WAVEFORMS.SAMPRATE IS 'sampling rate';
+COMMENT ON COLUMN ML_WAVEFORMS.STARTIME IS 'start time of stored waveform';
+COMMENT ON COLUMN ML_WAVEFORMS.ENDTIME IS 'end time of stored waveform';
+COMMENT ON COLUMN ML_WAVEFORMS.NSAMP IS 'number of samples stored';
+COMMENT ON COLUMN ML_WAVEFORMS.CALIB IS 'calibration value';
+COMMENT ON COLUMN ML_WAVEFORMS.SAMPLES IS 'calibrated samples of given channel as 4byte floats in hexa';
 
 -- use in a trigger to autoincrement the sequence
 CREATE OR REPLACE TRIGGER WAVEFORM_ID_INCREMENT
@@ -601,7 +613,28 @@ commit;
 
 ----------------------------POPULATE CPHASE_IPHASE column
 
-UPDATE TABLE ML_FEATURES SET CPHASE_IPHASE = 'S' where IPHASE in ('Sn', 'Lg', 'Rg', 'Sx'); 
-UPDATE TABLE ML_FEATURES SET CPHASE_IPHASE = 'P' where IPHASE in ('Pn', 'Pg', 'Px'); 
-UPDATE TABLE ML_FEATURES SET CPHASE_IPHASE = 'T' where IPHASE in ('P', 'PKP', 'PKPbc', 'PcP', 'PKPab', 'pP', 'PP', 'PKKPbc', 'ScP', 'SKPbc', 'PKhKP', 'PKiKP', 'PKP2', 'Pdiff', 'SKP', 'pPKP', 'PKKPab', 'pPKPbc', 'PKKP', 'SKKPbc', 'PKP2bc', 'P3KPbc', 'sP', 'SKPab', 'P4KPbc', 'PKP2ab', 'pPKPab', 'P3KP', 'SKKP', 'SKiKP', 'SKKPab', 'SKKS', 'P4KP', 'SP', 'S', 'ScS', 'SS', 'Sdiff', 'pPcP', 'sPKP', 'tx');
-UPDATE TABLE ML_FEATURES SET CPHASE_IPHASE = 'N' where IPHASE='N'; 
+UPDATE ML_FEATURES SET CPHASE_IPHASE = 'S' where IPHASE in ('Sn', 'Lg', 'Rg', 'Sx'); 
+UPDATE ML_FEATURES SET CPHASE_IPHASE = 'P' where IPHASE in ('Pn', 'Pg', 'Px'); 
+UPDATE ML_FEATURES SET CPHASE_IPHASE = 'T' where IPHASE in ('P', 'PKP', 'PKPbc', 'PcP', 'PKPab', 'pP', 'PP', 'PKKPbc', 'ScP', 'SKPbc', 'PKhKP', 'PKiKP', 'PKP2', 'Pdiff', 'SKP', 'pPKP', 'PKKPab', 'pPKPbc', 'PKKP', 'SKKPbc', 'PKP2bc', 'P3KPbc', 'sP', 'SKPab', 'P4KPbc', 'PKP2ab', 'pPKPab', 'P3KP', 'SKKP', 'SKiKP', 'SKKPab', 'SKKS', 'P4KP', 'SP', 'S', 'ScS', 'SS', 'Sdiff', 'pPcP', 'sPKP', 'tx');
+UPDATE ML_FEATURES SET CPHASE_IPHASE = 'N' where IPHASE='N'; 
+
+select distinct CPHASE_IPHASE from ml_features;
+select count(arid) from ml_features where cphase_iphase is null;
+
+select * from ml_features where cphase_iphase is n
+ull;
+select * from ml_features where iphase='LR';
+
+
+select distinct iphase from ml_features where source in ('A', 'H');
+
+
+update ml_features set iphase=null, cphase_iphase = null where source='M';
+
+update ml_features set cphase_iphase='regS' where cphase_iphase='S';
+update ml_features set cphase_iphase='regP' where cphase_iphase='P';
+update ml_features set cphase_iphase='tele' where cphase_iphase='T';
+
+update ml_features set cphase_phase='regS' where cphase_phase='S';
+update ml_features set cphase_phase='regP' where cphase_phase='P';
+update ml_features set cphase_phase='tele' where cphase_phase='T';

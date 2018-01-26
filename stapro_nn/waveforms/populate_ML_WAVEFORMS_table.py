@@ -163,7 +163,7 @@ def populate_ML_WAVEFORMS(connection_udb, connection_extadb, sta, query_app=""):
 
 def test_extraction():
     """just a test..."""
-    arid = 37798590
+    arid = 125801379
     data = get_arrival_waveforms(connection_udb, arid, chan=None)
 
     nchan = len(data)
@@ -172,7 +172,7 @@ def test_extraction():
         ax = fig.add_subplot(nchan, 1, fi + 1)
         ax.plot(dat[9])
         ax.set_ylabel('%s %s' % (dat[2], dat[3]))
-
+        if fi==0: ax.set_title('Arrival %d (time %3.3f-%3.3f)' % (dat[1],dat[5],dat[6]))
     plt.show()
 
 
@@ -188,7 +188,7 @@ if __name__ == '__main__':
 
     #populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and cphase='S'")
     #populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and cphase='P'")
-    populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and f.cphase='T' and w.samples is null and w.calib is null and f.source not in ('H')")
-    populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and f.cphase='N'")
-    #test_extraction()
+    #populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and f.cphase='T' and w.samples is null and w.calib is null and f.source not in ('H')")
+    #populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and f.cphase='N'")
+    test_extraction()
 
