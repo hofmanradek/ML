@@ -5,37 +5,16 @@ conversion from s3 to f4 by Dima Bobrov
 """
 
 import numpy as np
-import cx_Oracle as db
 from pprint import pprint
 import sys
 import math
 import os
 from datetime import datetime as dt
 import matplotlib.pyplot as plt
+from dbtools import get_connection, exec_query
 
 
 BYTES_PER_SAMPLE = {'t4': 4, 's3': 3, 's4': 4}
-
-
-def get_cursor(dbname='extadb'):
-    """
-    :return: database connection cursor
-    """
-    with open('/home/hofman/.dbp.txt', 'r') as f:
-        dbpwd = f.read().strip()
-        conn = db.connect('hofman/%s@%s' % (dbpwd, dbname))
-        return conn.cursor()
-    return None
-
-
-def exec_query(query, cursor):
-    try:
-        c = cursor.execute(query)
-        return c
-    except Exception as e:
-        print("Query \n%s\n failed!" % query)
-        print(e)
-        sys.exit(1)
 
 
 def wfdisc_rows_to_dicts(rows):
@@ -196,7 +175,7 @@ def read_waveforms_from_files(t1, t2, wfdict, calib):
     # convert to floats given its particular type
     subdata = convert_raw_data(raw_data, datatype, mult=calib_fact)
     index = (tstart - t1) * samprate
-    return round(index), round(nsamp), subdata
+    return round(index), round(nsamp), subdata, calib_fact
 
 
 def get_waveform_data(sta, chan, t1, t2, cursor, calib=True):
@@ -212,19 +191,22 @@ def get_waveform_data(sta, chan, t1, t2, cursor, calib=True):
     wfdicts = fetch_wfdisc_entries(sta, chan, t1, t2, cursor)
     samprates = get_samperates(wfdicts)
 
+    if not samprates:
+        return np.array(()), 0, 0
+
     if max(samprates) == min(samprates):  # all wfdisc have the same samprate
         sr = samprates[0]
         data = np.zeros(math.ceil((t2-t1)*sr))
         for wfdict in wfdicts:
             # now we must calculate which samples will be occupied by the retrieved data from each wfdisc file
-            index, nsamp, subdata = read_waveforms_from_files(t1, t2, wfdict, calib)
+            index, nsamp, subdata, calib_fact = read_waveforms_from_files(t1, t2, wfdict, calib)
             # put data chunk in place
             data[index:index+nsamp] = subdata
     else:
         print('Samprates differ, exiting...')
         print(samprates)
         sys.exit(1)
-    return data
+    return data, sr, calib_fact
 
 
 def ts(*date):
@@ -257,10 +239,10 @@ def vizualize(data, show=True, save=False, filename=None, xlabel=None, ylabel=No
 
 
 if __name__ == "__main__":
-    cursor = get_cursor(dbname='repodb')
+    cursor = get_connection(dbname='repodb').cursor()
     sta = 'AK01'
     chan = 'BHZ'
-    data = get_waveform_data(sta, chan, ts(2018,1,1,23,59,50), ts(2018,1,3,0,0,10), cursor, calib=True)
+    data, sr, calib_fact = get_waveform_data(sta, chan, ts(2018,1,1,23,59,50), ts(2018,1,3,0,0,10), cursor, calib=True)
     vizualize(data, show=True, xlabel='samples', ylabel=sta+' '+chan, title='Calibrated')
 
     #data = get_waveform_data(sta, chan, ts(2018,1,1,23,59,50), ts(2018,1,2,0,0,10), cursor, calib=False)
