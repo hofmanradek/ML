@@ -273,6 +273,63 @@ and r.arid not in (select distinct arid from leb.assoc@extadb)
 order by r.time; --308,706 rows inserted.
 
 
+------------------------------------------------------------------------------------------------------------------------------------------
+---inser not associated which are not N
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+-----------not done fINALLY
+insert into ML_FEATURES 
+select r.arid "arid", r.sta "sta", r.time "time", r.iphase "iphase", 'N' "class_iphase", NULL "phase", 'N' "class_phase", 0 "retime", 'Z' "source", r.per "per", r.slow "slow", ap.rect "rect", ap.plans "plans",
+       ap.inang1 "inang1", ap.inang3 "inang3", ap.hmxmn "hmxmn", ap.hvratp "hvratp", ap.hvrat "hvrat", NULL "nab", NULL "tab", a1.htov "htov1", a2.htov "htov2", a3.htov "htov3", a4.htov "htov4", a5.htov "htov5" 
+from idcx.arrival@extadb r 
+join idcx.apma@extadb  ap on r.arid=ap.arid 
+join idcx.amp3c@extadb a1 on r.arid=a1.arid 
+join idcx.amp3c@extadb a2 on r.arid=a2.arid 
+join idcx.amp3c@extadb a3 on r.arid=a3.arid 
+join idcx.amp3c@extadb a4 on r.arid=a4.arid 
+join idcx.amp3c@extadb a5 on r.arid=a5.arid
+where r.sta='URZ' 
+and a1.cfreq=0.25 
+and a2.cfreq=0.5 
+and a3.cfreq=1 
+and a4.cfreq=2 
+and a5.cfreq=4 
+and r.arid not in (select distinct arid from leb.assoc@extadb)
+and r.arid not in (select distinct arid from ml_features)
+and r.time between 1451606400 and 1512000000
+order by r.time; --NOT DONE FINALLY
+
+
+ ARID              NUMBER(10,0) NOT NULL,
+  STA               VARCHAR2(8) NOT NULL,  
+  TIME              FLOAT(53)  NOT NULL,  
+  IPHASE            VARCHAR2(8), -- iwt
+  CPHASE_IPHASE     VARCHAR2(8),
+  PHASE             VARCHAR2(8),  -- phase as in LEB assoc
+  CPHASE_PHASE      VARCHAR2(8) NOT NULL, -- phase faimly - N, regP, regS and T (telP, telS..)
+  RETIME            FLOAT(24) NOT NULL,
+  SOURCE            VARCHAR2(1), -- A - automatic phase family type remained after association, H - automatic phase family changed by analyst, M - manually added by analysts
+  PER               FLOAT(24), ---arrival features follow
+  SLOW              FLOAT(24), 
+  RECT              FLOAT(24), ---apma features follow       
+  PLANS             FLOAT(24),         
+  INANG1            FLOAT(24),         
+  INANG3            FLOAT(24),           
+  HMXMN             FLOAT(24),         
+  HVRATP            FLOAT(24),         
+  HVRAT             FLOAT(24),         
+  NAB               FLOAT(24),---contextual features follow
+  TAB               FLOAT(24),
+  HTOV1             FLOAT(24),---amp3c features follow   
+  HTOV2             FLOAT(24),
+  HTOV3             FLOAT(24),
+  HTOV4             FLOAT(24),
+  HTOV5             FLOAT(24),
+
+
+
+
 select count(*) from ml_features where cphase='N' and sta='URZ'; --
 
 
@@ -293,6 +350,10 @@ DROP INDEX IDX_ML_FEATURES_CONTEX_T;
 DROP TABLE ML_FEATURES_CONTEXTUAL;
 WHENEVER SQLERROR EXIT FAILURE;
 
+select count(*) from ML_FEATURES_CONTEXTUAL;
+
+
+
 ---created auxiliaty table
 CREATE TABLE ML_FEATURES_CONTEXTUAL
 ( 
@@ -305,26 +366,6 @@ CREATE TABLE ML_FEATURES_CONTEXTUAL
   CONSTRAINT ML_FEATURE_CONTEXTUAL_PK PRIMARY KEY (ARID)
 ) ENABLE PRIMARY KEY USING INDEX;
 
-CREATE INDEX IDX_ML_FEATURES_CONTEX_T ON ML_FEATURES_CONTEXTUAL(TIME);
-ALTER INDEX IDX_ML_FEATURES_CONTEX_T REBUILD;
-
-insert into ML_FEATURES_CONTEXTUAL
-select a.arid, a.time,
-       (select count(arid) from ML_FEATURES where abs(a.time-time)<=60 and time>a.time and sta='URZ') "NAFTER",
-       (select count(arid) from ML_FEATURES where abs(a.time-time)<=60 and time<a.time and sta='URZ') "NBEFORE",
-       (select sum(abs(time-a.time)) from ML_FEATURES where abs(a.time-time)<=60 and time>a.time and sta='URZ') "TAFTER",
-       (select sum(abs(time-a.time)) from ML_FEATURES where abs(a.time-time)<=60 and time<a.time and sta='URZ') "TBEFORE",
-       NULL,
-       NULL
-from ML_features a where a.sta='URZ';
-
-commit;
-
-select count(*) from ml_features where sta='URZ';
-select count(*) from ml_features where sta='LPAZ';
-
-
-
 --add columns for NAB and TAB
 ALTER TABLE
    ML_FEATURES_CONTEXTUAL
@@ -333,13 +374,46 @@ ADD(
    TAB FLOAT(24)
 );
 
+CREATE INDEX IDX_ML_FEATURES_CONTEX_T ON ML_FEATURES_CONTEXTUAL(TIME);
+ALTER INDEX IDX_ML_FEATURES_CONTEX_T REBUILD;
+
+insert into ML_FEATURES_CONTEXTUAL
+select a.arid, a.time,
+       (select count(arid) from idcx.arrival@extadb where time between a.time and a.time+60 and sta='URZ' and arid!=a.arid) "NAFTER",
+       (select count(arid) from idcx.arrival@extadb where time between a.time-60 and a.time and sta='URZ' and arid!=a.arid) "NBEFORE",
+       (select sum(a.time-time) from idcx.arrival@extadb where time between a.time and a.time+60 and sta='URZ' and arid!=a.arid) "TAFTER",
+       (select sum(time-a.time) from idcx.arrival@extadb where time between a.time-60 and a.time and sta='URZ' and arid!=a.arid) "TBEFORE",
+       --NULL, NULL, NULL,
+       NULL,
+       NULL
+from ML_features a where a.sta='URZ' and class_phase='N';
+
+
+--regS - 11135 rows;
+--regP - 11818 rows;
+--tele - 38083 rows;  --61036
+--N - 
+
+commit;
+
+--select arid from idcx.arrival@extadb where time between  1483102695.895-60 and  1483102695.895 and sta='URZ';
+--select sum(time-1483102695.895) from idcx.arrival@extadb where time between 1483102695.895-60 and 1483102695.895 and sta='URZ';
+
+
+--select count(*) from ml_features where sta='URZ';
+--select count(*) from ml_features where sta='LPAZ';
+
 -- populate them
 UPDATE ML_FEATURES_CONTEXTUAL SET NAB = (NAFTER-NBEFORE)/10 where arid in (select arid from ml_features where sta='URZ');
-UPDATE ML_FEATURES_CONTEXTUAL SET TAB =  (NVL(TAFTER/NULLIF(NAFTER,0), 0) - NVL(TBEFORE/NULLIF(NBEFORE,0), 0))/100 where arid in (select arid from ml_features where sta='URZ');
+UPDATE ML_FEATURES_CONTEXTUAL SET TAB =  (NVL(abs(TAFTER)/NULLIF(NAFTER,0), 0) - NVL(abs(TBEFORE)/NULLIF(NBEFORE,0), 0))/100 where arid in (select arid from ml_features where sta='URZ');
+
+select * from ML_FEATURES_CONTEXTUAL where arid=117647639;
+
 
 -- now we plug the contextual features into to feature table
 UPDATE ML_FEATURES a SET (a.NAB, a.TAB) = (SELECT b.NAB, b.TAB from ML_FEATURES_CONTEXTUAL b WHERE a.arid=b.arid) where a.sta='URZ';
 --406,381 rows updated.
+select * from ML_FEATURES_CONTEXTUAL;
 
 select * from ml_features where sta='URZ';
 select distinct iphase from idcx.arrival@idcdev;
