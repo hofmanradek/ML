@@ -300,33 +300,7 @@ and r.arid not in (select distinct arid from ml_features)
 and r.time between 1451606400 and 1512000000
 order by r.time; --NOT DONE FINALLY
 
-
- ARID              NUMBER(10,0) NOT NULL,
-  STA               VARCHAR2(8) NOT NULL,  
-  TIME              FLOAT(53)  NOT NULL,  
-  IPHASE            VARCHAR2(8), -- iwt
-  CPHASE_IPHASE     VARCHAR2(8),
-  PHASE             VARCHAR2(8),  -- phase as in LEB assoc
-  CPHASE_PHASE      VARCHAR2(8) NOT NULL, -- phase faimly - N, regP, regS and T (telP, telS..)
-  RETIME            FLOAT(24) NOT NULL,
-  SOURCE            VARCHAR2(1), -- A - automatic phase family type remained after association, H - automatic phase family changed by analyst, M - manually added by analysts
-  PER               FLOAT(24), ---arrival features follow
-  SLOW              FLOAT(24), 
-  RECT              FLOAT(24), ---apma features follow       
-  PLANS             FLOAT(24),         
-  INANG1            FLOAT(24),         
-  INANG3            FLOAT(24),           
-  HMXMN             FLOAT(24),         
-  HVRATP            FLOAT(24),         
-  HVRAT             FLOAT(24),         
-  NAB               FLOAT(24),---contextual features follow
-  TAB               FLOAT(24),
-  HTOV1             FLOAT(24),---amp3c features follow   
-  HTOV2             FLOAT(24),
-  HTOV3             FLOAT(24),
-  HTOV4             FLOAT(24),
-  HTOV5             FLOAT(24),
-
+commit;
 
 
 
@@ -358,11 +332,11 @@ select count(*) from ML_FEATURES_CONTEXTUAL;
 CREATE TABLE ML_FEATURES_CONTEXTUAL
 ( 
   ARID              NUMBER(10,0) NOT NULL,
-  TIME              FLOAT(53)  NOT NULL,  
-  NAFTER            NUMBER(8),
-  NBEFORE           NUMBER(8),
-  TAFTER            NUMBER(8),
-  TBEFORE           NUMBER(8),
+  TIME              FLOAT  NOT NULL,  
+  NAFTER            NUMBER,
+  NBEFORE           NUMBER,
+  TAFTER            NUMBER,
+  TBEFORE           NUMBER,
   CONSTRAINT ML_FEATURE_CONTEXTUAL_PK PRIMARY KEY (ARID)
 ) ENABLE PRIMARY KEY USING INDEX;
 
@@ -370,8 +344,8 @@ CREATE TABLE ML_FEATURES_CONTEXTUAL
 ALTER TABLE
    ML_FEATURES_CONTEXTUAL
 ADD(
-   NAB FLOAT(24), 
-   TAB FLOAT(24)
+   NAB FLOAT, 
+   TAB FLOAT
 );
 
 CREATE INDEX IDX_ML_FEATURES_CONTEX_T ON ML_FEATURES_CONTEXTUAL(TIME);
@@ -386,15 +360,17 @@ select a.arid, a.time,
        --NULL, NULL, NULL,
        NULL,
        NULL
-from ML_features a where a.sta='URZ' and class_phase='N';
+from ML_features a where a.sta='URZ' and a.class_phase in ('N');
 
 
 --regS - 11135 rows;
 --regP - 11818 rows;
 --tele - 38083 rows;  --61036
---N - 
+--N - 301,371
 
 commit;
+
+select count(*) from ML_FEATURES where source='Z' and class_phase='N';
 
 --select arid from idcx.arrival@extadb where time between  1483102695.895-60 and  1483102695.895 and sta='URZ';
 --select sum(time-1483102695.895) from idcx.arrival@extadb where time between 1483102695.895-60 and 1483102695.895 and sta='URZ';
@@ -404,15 +380,21 @@ commit;
 --select count(*) from ml_features where sta='LPAZ';
 
 -- populate them
-UPDATE ML_FEATURES_CONTEXTUAL SET NAB = (NAFTER-NBEFORE)/10 where arid in (select arid from ml_features where sta='URZ');
-UPDATE ML_FEATURES_CONTEXTUAL SET TAB =  (NVL(abs(TAFTER)/NULLIF(NAFTER,0), 0) - NVL(abs(TBEFORE)/NULLIF(NBEFORE,0), 0))/100 where arid in (select arid from ml_features where sta='URZ');
+UPDATE ML_FEATURES_CONTEXTUAL SET NAB = (NAFTER-NBEFORE)/10. where arid in (select arid from ml_features where sta='URZ');
+UPDATE ML_FEATURES_CONTEXTUAL SET TAB =  (NVL(abs(TAFTER)/NULLIF(NAFTER,0.), 0.) - NVL(abs(TBEFORE)/NULLIF(NBEFORE,0.), 0.))/100.0 where arid in (select arid from ml_features where sta='URZ');
+commit;
 
-select * from ML_FEATURES_CONTEXTUAL where arid=117647639;
-
+select * from ML_FEATURES_CONTEXTUAL where arid=122995432;
+select * from ML_FEATURES where arid=122995432;
+select count(*) from ml_features where sta='URZ';
+select count(*) from ml_features_contextual;
 
 -- now we plug the contextual features into to feature table
 UPDATE ML_FEATURES a SET (a.NAB, a.TAB) = (SELECT b.NAB, b.TAB from ML_FEATURES_CONTEXTUAL b WHERE a.arid=b.arid) where a.sta='URZ';
 --406,381 rows updated.
+
+--URZ 19/4/2018 399,415 rows updated.
+
 select * from ML_FEATURES_CONTEXTUAL;
 
 select * from ml_features where sta='URZ';
@@ -444,6 +426,9 @@ where (per is NULL)
       or (htov5 is NULL)       
 group by phase;
 -- 84 rows returned, all from automatic
+
+
+
 /*
 CPHASE   COUNT(CPHASE)
 -------- -------------
@@ -454,6 +439,13 @@ S                    1
 
 delete from ML_FEATURES where (htov1 is NULL) or (htov2 is NULL) or (htov3 is NULL) or (htov4 is NULL) or (htov5 is NULL);
 -- 84 rows deleted
+
+
+delete
+from ML_FEATURES 
+where hmxmn<=0;
+comm
+it;
 
 -- grant select to public
 GRANT SELECT ON HOFMAN.ML_FEATURES TO PUBLIC;
