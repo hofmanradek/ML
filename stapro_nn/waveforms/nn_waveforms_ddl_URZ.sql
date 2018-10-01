@@ -273,6 +273,37 @@ and r.arid not in (select distinct arid from leb.assoc@extadb)
 order by r.time; --308,706 rows inserted.
 
 
+------------------------------------------------------------------------------------------------------------------------------------------
+---inser not associated which are not N
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+-----------not done fINALLY
+insert into ML_FEATURES 
+select r.arid "arid", r.sta "sta", r.time "time", r.iphase "iphase", 'N' "class_iphase", NULL "phase", 'N' "class_phase", 0 "retime", 'Z' "source", r.per "per", r.slow "slow", ap.rect "rect", ap.plans "plans",
+       ap.inang1 "inang1", ap.inang3 "inang3", ap.hmxmn "hmxmn", ap.hvratp "hvratp", ap.hvrat "hvrat", NULL "nab", NULL "tab", a1.htov "htov1", a2.htov "htov2", a3.htov "htov3", a4.htov "htov4", a5.htov "htov5" 
+from idcx.arrival@extadb r 
+join idcx.apma@extadb  ap on r.arid=ap.arid 
+join idcx.amp3c@extadb a1 on r.arid=a1.arid 
+join idcx.amp3c@extadb a2 on r.arid=a2.arid 
+join idcx.amp3c@extadb a3 on r.arid=a3.arid 
+join idcx.amp3c@extadb a4 on r.arid=a4.arid 
+join idcx.amp3c@extadb a5 on r.arid=a5.arid
+where r.sta='URZ' 
+and a1.cfreq=0.25 
+and a2.cfreq=0.5 
+and a3.cfreq=1 
+and a4.cfreq=2 
+and a5.cfreq=4 
+and r.arid not in (select distinct arid from leb.assoc@extadb)
+and r.arid not in (select distinct arid from ml_features)
+and r.time between 1451606400 and 1512000000
+order by r.time; --NOT DONE FINALLY
+
+commit;
+
+
+
 select count(*) from ml_features where cphase='N' and sta='URZ'; --
 
 
@@ -293,53 +324,78 @@ DROP INDEX IDX_ML_FEATURES_CONTEX_T;
 DROP TABLE ML_FEATURES_CONTEXTUAL;
 WHENEVER SQLERROR EXIT FAILURE;
 
+select count(*) from ML_FEATURES_CONTEXTUAL;
+
+
+
 ---created auxiliaty table
 CREATE TABLE ML_FEATURES_CONTEXTUAL
 ( 
   ARID              NUMBER(10,0) NOT NULL,
-  TIME              FLOAT(53)  NOT NULL,  
-  NAFTER            NUMBER(8),
-  NBEFORE           NUMBER(8),
-  TAFTER            NUMBER(8),
-  TBEFORE           NUMBER(8),
+  TIME              FLOAT  NOT NULL,  
+  NAFTER            NUMBER,
+  NBEFORE           NUMBER,
+  TAFTER            NUMBER,
+  TBEFORE           NUMBER,
   CONSTRAINT ML_FEATURE_CONTEXTUAL_PK PRIMARY KEY (ARID)
 ) ENABLE PRIMARY KEY USING INDEX;
+
+--add columns for NAB and TAB
+ALTER TABLE
+   ML_FEATURES_CONTEXTUAL
+ADD(
+   NAB FLOAT, 
+   TAB FLOAT
+);
 
 CREATE INDEX IDX_ML_FEATURES_CONTEX_T ON ML_FEATURES_CONTEXTUAL(TIME);
 ALTER INDEX IDX_ML_FEATURES_CONTEX_T REBUILD;
 
 insert into ML_FEATURES_CONTEXTUAL
 select a.arid, a.time,
-       (select count(arid) from ML_FEATURES where abs(a.time-time)<=60 and time>a.time and sta='URZ') "NAFTER",
-       (select count(arid) from ML_FEATURES where abs(a.time-time)<=60 and time<a.time and sta='URZ') "NBEFORE",
-       (select sum(abs(time-a.time)) from ML_FEATURES where abs(a.time-time)<=60 and time>a.time and sta='URZ') "TAFTER",
-       (select sum(abs(time-a.time)) from ML_FEATURES where abs(a.time-time)<=60 and time<a.time and sta='URZ') "TBEFORE",
+       (select count(arid) from idcx.arrival@extadb where time between a.time and a.time+60 and sta='URZ' and arid!=a.arid) "NAFTER",
+       (select count(arid) from idcx.arrival@extadb where time between a.time-60 and a.time and sta='URZ' and arid!=a.arid) "NBEFORE",
+       (select sum(a.time-time) from idcx.arrival@extadb where time between a.time and a.time+60 and sta='URZ' and arid!=a.arid) "TAFTER",
+       (select sum(time-a.time) from idcx.arrival@extadb where time between a.time-60 and a.time and sta='URZ' and arid!=a.arid) "TBEFORE",
+       --NULL, NULL, NULL,
        NULL,
        NULL
-from ML_features a where a.sta='URZ';
+from ML_features a where a.sta='URZ' and a.class_phase in ('N');
+
+
+--regS - 11135 rows;
+--regP - 11818 rows;
+--tele - 38083 rows;  --61036
+--N - 301,371
 
 commit;
 
-select count(*) from ml_features where sta='URZ';
-select count(*) from ml_features where sta='LPAZ';
+select count(*) from ML_FEATURES where source='Z' and class_phase='N';
+
+--select arid from idcx.arrival@extadb where time between  1483102695.895-60 and  1483102695.895 and sta='URZ';
+--select sum(time-1483102695.895) from idcx.arrival@extadb where time between 1483102695.895-60 and 1483102695.895 and sta='URZ';
 
 
-
---add columns for NAB and TAB
-ALTER TABLE
-   ML_FEATURES_CONTEXTUAL
-ADD(
-   NAB FLOAT(24), 
-   TAB FLOAT(24)
-);
+--select count(*) from ml_features where sta='URZ';
+--select count(*) from ml_features where sta='LPAZ';
 
 -- populate them
-UPDATE ML_FEATURES_CONTEXTUAL SET NAB = (NAFTER-NBEFORE)/10 where arid in (select arid from ml_features where sta='URZ');
-UPDATE ML_FEATURES_CONTEXTUAL SET TAB =  (NVL(TAFTER/NULLIF(NAFTER,0), 0) - NVL(TBEFORE/NULLIF(NBEFORE,0), 0))/100 where arid in (select arid from ml_features where sta='URZ');
+UPDATE ML_FEATURES_CONTEXTUAL SET NAB = (NAFTER-NBEFORE)/10. where arid in (select arid from ml_features where sta='URZ');
+UPDATE ML_FEATURES_CONTEXTUAL SET TAB =  (NVL(abs(TAFTER)/NULLIF(NAFTER,0.), 0.) - NVL(abs(TBEFORE)/NULLIF(NBEFORE,0.), 0.))/100.0 where arid in (select arid from ml_features where sta='URZ');
+commit;
+
+select * from ML_FEATURES_CONTEXTUAL where arid=122995432;
+select * from ML_FEATURES where arid=122995432;
+select count(*) from ml_features where sta='URZ';
+select count(*) from ml_features_contextual;
 
 -- now we plug the contextual features into to feature table
 UPDATE ML_FEATURES a SET (a.NAB, a.TAB) = (SELECT b.NAB, b.TAB from ML_FEATURES_CONTEXTUAL b WHERE a.arid=b.arid) where a.sta='URZ';
 --406,381 rows updated.
+
+--URZ 19/4/2018 399,415 rows updated.
+
+select * from ML_FEATURES_CONTEXTUAL;
 
 select * from ml_features where sta='URZ';
 select distinct iphase from idcx.arrival@idcdev;
@@ -370,6 +426,9 @@ where (per is NULL)
       or (htov5 is NULL)       
 group by phase;
 -- 84 rows returned, all from automatic
+
+
+
 /*
 CPHASE   COUNT(CPHASE)
 -------- -------------
@@ -380,6 +439,13 @@ S                    1
 
 delete from ML_FEATURES where (htov1 is NULL) or (htov2 is NULL) or (htov3 is NULL) or (htov4 is NULL) or (htov5 is NULL);
 -- 84 rows deleted
+
+
+delete
+from ML_FEATURES 
+where hmxmn<=0;
+comm
+it;
 
 -- grant select to public
 GRANT SELECT ON HOFMAN.ML_FEATURES TO PUBLIC;
