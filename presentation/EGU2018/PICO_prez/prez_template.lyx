@@ -1,0 +1,472 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass beamer
+\begin_preamble
+\usepackage{beamerthemesplit}
+\usepackage[orientation=landscape,size=custom,width=16,height=9,scale=0.5,debug]{beamerposter} 
+\usepackage{lipsum}
+\usepackage{changepage}
+
+\usecolortheme{rhwgb}
+\setbeamertemplate{frametitle}
+{
+    \nointerlineskip
+    \begin{beamercolorbox}[sep=0.3cm,ht=1.8em,wd=\paperwidth]{frametitle}
+        \vbox{}\vskip-2ex%
+        \strut\insertframetitle\strut
+        \hfill
+        \raisebox{-3mm}{\includegraphics[width=3.0cm]{logo.png}}
+        \vskip-0.8ex%
+    \end{beamercolorbox}
+}
+
+\setbeamertemplate{footline}
+{
+  %\leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=0.9\paperwidth,ht=3.25ex,dp=1.0ex,left]{author in head/foot}%
+    \hspace*{1ex} International Data Centre/Software Applications Section \hspace*{1ex}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=0.1\paperwidth,ht=3.25ex,dp=1.0ex,center]{author in head/foot}%
+     \insertframenumber{} / \inserttotalframenumber\hspace*{1ex}
+  \end{beamercolorbox}%
+  }%
+  \vskip0pt%
+}
+\setbeamertemplate{navigation symbols}{}
+
+
+
+\setbeamerfont{frametitle}{size=\Large,series=\mdseries}
+\setbeamerfont{footline}{size=\footnotesize,series=\mdseries}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout PlainFrame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout PlainFrame
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+
+\size larger
+Advances in quality control and array masking algorithm some lengthy title
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout PlainFrame
+\begin_inset VSpace vfill
+\end_inset
+
+
+\end_layout
+
+\begin_layout PlainFrame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{columns}     
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+column{
+\backslash
+dimexpr
+\backslash
+paperwidth}     
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.34
+\backslash
+textwidth]{pics/Picture1.jpg}  
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.34
+\backslash
+textwidth]{pics/Picture2.jpg}  
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.34
+\backslash
+textwidth]{pics/Picture3.jpg}  
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{columns}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout PlainFrame
+\begin_inset VSpace vfill
+\end_inset
+
+
+\end_layout
+
+\begin_layout PlainFrame
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+authors...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout PlainFrame
+\begin_inset VSpace vfill
+\end_inset
+
+
+\end_layout
+
+\begin_layout PlainFrame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{columns}[c] 
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+column[T]{0.7
+\backslash
+textwidth} 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+footnotesize International Data Centre
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Preparatory Commission for the Comprehensive
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Nuclear-Test-Ban Treaty Organization,
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Vienna International Centre
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+P.O.
+ Box 1200, A-1400 Vienna, AUSTRIA
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+column[T]{0.3
+\backslash
+textwidth} 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+footnotesize Waveform Expert Group
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Working Group B -50th session
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+20 Feb.-3 Mar.
+ 2017
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{columns} 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout PlainFrame
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Introduction
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+DASDASD
+\end_layout
+
+\begin_layout Itemize
+asdasdasda
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+asdasdasdasdasdasd
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+dadasdasdasda
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Conclusion
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+asdasdasdas
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
