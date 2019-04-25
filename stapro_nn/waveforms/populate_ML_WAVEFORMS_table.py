@@ -38,7 +38,7 @@ def get_arrival_waveforms(connection, arid, chan=None):
 
 def get_all_arrivals(sta, cursor, query_app=""):
     #gets all arids available in ML_WAVEFORMS table
-    query = "select f.arid, f.time from ML_FEATURES f join ML_WAVEFORMS w on f.arid=w.arid where f.sta='%s'" % sta
+    query = "select distinct f.arid, f.time from ML_FEATURES f join ML_WAVEFORMS w on f.arid=w.arid where f.sta='%s'" % sta
     query += " "+query_app
     print(query)
     ret = dbtools.exec_query(query, cursor)
@@ -117,42 +117,46 @@ def populate_ML_WAVEFORMS(connection_udb, connection_extadb, sta, query_app=""):
         #get waveform for each channel
         for chan in chans:
 
-            chan = chan[0]
-            print('Processing chan %s for arid=%d' % (chan, arid))
-            #starttime = time - samples_before/samprate
-            #endtime = time + samples_after/samprate
-            starttime = time - time_before
-            endtime = time + time_after
+            try:
+                chan = chan[0]
+                print('Processing chan %s for arid=%d' % (chan, arid))
+                #starttime = time - samples_before/samprate
+                #endtime = time + samples_after/samprate
+                starttime = time - time_before
+                endtime = time + time_after
 
-            data, samprate, calib_fact = read_wfdisc.get_waveform_data(sta,
-                                                     chan,
-                                                     starttime,
-                                                     endtime,
-                                                     cursor_extadb,
-                                                     calib=True)
 
-            data = list(data)
-            nsamp = len(data)
-            samples =  struct.pack('%sf' % nsamp, *data)
-            samples_hex = samples.hex()
-            query = """UPDATE ml_waveforms 
-                       SET samprate=:samprate,
-                           starttime=:starttime,
-                           endtime=:endtime,
-                           nsamp=:nsamp,
-                           samples=:samples,
-                           calib=:calib 
-                       WHERE arid=:arid
-                         AND chan=:chan
-            """
-            cursor_udb.execute(query, {'arid': arid,
-                                   'chan': chan,
-                                   'samprate': samprate,
-                                   'starttime': starttime,
-                                   'endtime': endtime,
-                                   'nsamp': nsamp,
-                                   'samples': samples_hex,
-                                   'calib': calib_fact})
+                data, samprate, calib_fact = read_wfdisc.get_waveform_data(sta,
+                                                         chan,
+                                                         starttime,
+                                                         endtime,
+                                                         cursor_extadb,
+                                                         calib=True)
+
+                data = list(data)
+                nsamp = len(data)
+                samples =  struct.pack('%sf' % nsamp, *data)
+                samples_hex = samples.hex()
+                query = """UPDATE ml_waveforms 
+                           SET samprate=:samprate,
+                               starttime=:starttime,
+                               endtime=:endtime,
+                               nsamp=:nsamp,
+                               samples=:samples,
+                               calib=:calib 
+                           WHERE arid=:arid
+                             AND chan=:chan
+                """
+                cursor_udb.execute(query, {'arid': arid,
+                                       'chan': chan,
+                                       'samprate': samprate,
+                                       'starttime': starttime,
+                                       'endtime': endtime,
+                                       'nsamp': nsamp,
+                                       'samples': samples_hex,
+                                       'calib': calib_fact})
+            except:
+                print('ERROR! chan %s for arid=%d' % (chan, arid))
 
         connection_udb.commit()  # we commit after all channels for one arrival
 
@@ -186,9 +190,8 @@ if __name__ == '__main__':
         connection_extadb = db.connect('hofman/%s@%s' % (dbpwd, 'extadb'))
 
 
-    #populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and cphase='S'")
-    #populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and cphase='P'")
-    #populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and f.cphase='T' and w.samples is null and w.calib is null and f.source not in ('H')")
-    #populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and f.cphase='N'")
-    test_extraction()
+    #populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'URZ', query_app="and f.class_phase='regS'")
+    #populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'URZ', query_app="and f.class_phase='regP'")
+    populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'URZ', query_app="and f.class_phase='tele'")  # and w.samples is null and w.calib is null")
+    #populate_ML_WAVEFORMS(connection_udb, connection_extadb, 'LPAZ', query_app="and f.class_phase='N' and w.samples is null and w.calib is null")
 
