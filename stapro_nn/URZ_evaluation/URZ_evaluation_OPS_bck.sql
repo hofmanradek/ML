@@ -1,10 +1,10 @@
 -- new URZ weights deployed to OPS 10/12/2018
 
 
-select count(*) from idcx.arrival@extodb where sta='URZ' and lddate >= to_date('2018/12/13','yy/mm/dd'); --3377 as of 31.1.2019
+select count(*) from idcx.arrival@extodb where sta='URZ' and lddate >= to_date('2018/12/13','yy/mm/dd'); --3573 as of 22.1.2019
 
 
-select min(lddate) from idcx.arrival@extodb where sta='URZ'; 
+select min(lddate) from idcx.arrival@extodb where sta='URZ';
 
 drop table URZ_EVAL_OPS;
 
@@ -35,7 +35,7 @@ AND er.arid not in (select arid from leb.assoc@extodb where sta='URZ' and lddate
 
 commit;
 
-select count(*) from URZ_EVAL_OPS; --3377
+select count(*) from URZ_EVAL_OPS; --3573
 
 ALTER TABLE URZ_EVAL_OPS
   ADD (class_iphase_dev varchar2(5),
@@ -86,30 +86,30 @@ commit;
 
 select * from URZ_EVAL_OPS where class_iphase_dev is null or class_iphase_odb is null or class_phase_odb is null;
 
-select count(*) from URZ_EVAL_OPS; --3377
+select count(*) from URZ_EVAL_OPS; --3573
 
-select count(*) from URZ_EVAL_OPS where assoc_phase is not null; -- 289 associated
+select count(*) from URZ_EVAL_OPS where assoc_phase is not null; -- 260 associated
  
-select count(*) from URZ_EVAL_OPS where class_iphase_dev='regS' and CLASS_PHASE_ODB='regS' and assoc_phase is not null; -- 49
-select count(*) from URZ_EVAL_OPS where class_iphase_odb='regS' and CLASS_PHASE_ODB='regS' and assoc_phase is not null; -- 49
+select count(*) from URZ_EVAL_OPS where class_iphase_dev='regS' and CLASS_PHASE_ODB='regS' and assoc_phase is not null; -- 34
+select count(*) from URZ_EVAL_OPS where class_iphase_odb='regS' and CLASS_PHASE_ODB='regS' and assoc_phase is not null; -- 34
 
-select count(*) from URZ_EVAL_OPS where class_iphase_dev='regP' and CLASS_PHASE_ODB='regP' and assoc_phase is not null; -- 33
-select count(*) from URZ_EVAL_OPS where class_iphase_odb='regP' and CLASS_PHASE_ODB='regP' and assoc_phase is not null; -- 33
+select count(*) from URZ_EVAL_OPS where class_iphase_dev='regP' and CLASS_PHASE_ODB='regP' and assoc_phase is not null; -- 31
+select count(*) from URZ_EVAL_OPS where class_iphase_odb='regP' and CLASS_PHASE_ODB='regP' and assoc_phase is not null; -- 31
 
-select count(*) from URZ_EVAL_OPS where class_iphase_dev='T' and CLASS_PHASE_ODB='T' and assoc_phase is not null; -- 94
-select count(*) from URZ_EVAL_OPS where class_iphase_odb='T' and CLASS_PHASE_ODB='T' and assoc_phase is not null; -- 94
+select count(*) from URZ_EVAL_OPS where class_iphase_dev='T' and CLASS_PHASE_ODB='T' and assoc_phase is not null; -- 90
+select count(*) from URZ_EVAL_OPS where class_iphase_odb='T' and CLASS_PHASE_ODB='T' and assoc_phase is not null; -- 90
 
-select count(*) from URZ_EVAL_OPS where class_iphase_dev = class_phase_odb; --1884/3377 correct => 0.5578
-select count(*) from URZ_EVAL_OPS where class_iphase_odb = class_phase_odb; --1884/3377 correct => 0.5578
+select count(*) from URZ_EVAL_OPS where class_iphase_dev = class_phase_odb; --1989/3573 correct => 0.55667
+select count(*) from URZ_EVAL_OPS where class_iphase_odb = class_phase_odb; --1989/3573 correct => 0.55667
 
-select count(*) from URZ_EVAL_OPS where class_iphase_dev = class_phase_odb and assoc_phase is not null; --176/289 cor => 0.61
-select count(*) from URZ_EVAL_OPS where class_iphase_odb = class_phase_odb and assoc_phase is not null; --176/289 cor => 0.61
+select count(*) from URZ_EVAL_OPS where class_iphase_dev = class_phase_odb and assoc_phase is not null; --155/260 cor => 0.5961
+select count(*) from URZ_EVAL_OPS where class_iphase_odb = class_phase_odb and assoc_phase is not null; --155/260 cor => 0.5961
 
 select count(*) from URZ_EVAL_OPS;
 
 -- N phase rate
-select count(*) from URZ_EVAL_OPS where class_iphase_dev='N' and assoc_phase is not null; --21 / 289 0.072
-select count(*) from URZ_EVAL_OPS where class_iphase_odb='N' and assoc_phase is not null; --21 / 289 0.072
+select count(*) from URZ_EVAL_OPS where class_iphase_dev='N' and assoc_phase is not null; --15 / 260 0.0576
+select count(*) from URZ_EVAL_OPS where class_iphase_odb='N' and assoc_phase is not null; --15 / 260 0.0576
 
 select count(*) from URZ_EVAL_OPS where class_phase_odb not in ('regS', 'regP', 'T');  -- we have really just those associated
 select count(*) from URZ_EVAL_OPS where class_phase_odb not in ('regS', 'regP', 'T');  -- we have really just those associated
