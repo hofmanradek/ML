@@ -1,4 +1,4 @@
-
+select max(time) from idcx.arrival where sta='URZ'; -- 1512017079.74500 2017334  2017/11/30 04:44:39.74499 Nov Thu
 
 select min(time), max(time) from st_e_tables.RUNSP17FEMAEGU_arrival;
 --1485908654.02 and 1491004884.82

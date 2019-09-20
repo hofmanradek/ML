@@ -52,6 +52,7 @@ where e.arid not in (select arid from reb.assoc where sta='URZ' and time between
 
 desc reb.assoc;
 
+commit;
 ----------------------
 -- NEW WEIGHTS
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -80,6 +81,9 @@ where e.arid not in (select arid from reb.assoc where sta='URZ' and time between
 e.iphase='N';
 
 --total 0.72157
+
+
+
 
 
 ---to see times
