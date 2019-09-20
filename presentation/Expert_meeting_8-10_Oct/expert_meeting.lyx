@@ -637,6 +637,26 @@ Cascade of three binary classifiers
 \begin_deeper
 \begin_layout Standard
 \align center
+
+\size footnotesize
+SERENO, T.
+ and PATNAIK, G., Initial Wave-type Identification with Neural Networks and
+ its Contribution to Automated Processing in IMS Version 3.0, Technical Report,
+ SAIC-93/1219, 1993
+\end_layout
+
+\begin_layout Enumerate
+
+\size footnotesize
+WANG, J., Adaptive training of neural networks for automatic seismic phase
+ identification.
+ Monitoring the Comprehensive Nuclear-Test-Bant Treaty: Data Processing
+ and Infrasound (2002): 1021-1041.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
 \begin_inset Graphics
 	filename pics/StaPro_nn_cascade.png
 	width 72text%
