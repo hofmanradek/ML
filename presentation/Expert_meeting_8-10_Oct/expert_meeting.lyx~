@@ -3480,12 +3480,11 @@ old weights,
 \begin_inset Formula $m_{b}$
 \end_inset
 
- SNR, reg.
- P
+ SNR, T
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-T refined
+regP refined
 \end_layout
 
 \end_inset
@@ -3570,12 +3569,11 @@ new weights
 \begin_layout Plain Layout
 
 \size small
-new, reg.
- P
+new, T
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-T refined
+regP refined
 \end_layout
 
 \end_inset
@@ -4707,12 +4705,11 @@ OPS
 \begin_inset Formula $m_{b}$
 \end_inset
 
- SNR, reg.
- P
+ SNR, T
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-T refined
+regP refined
 \end_layout
 
 \end_inset
@@ -4762,12 +4759,11 @@ T refined
 \size small
 DVL
 \series default
-: new weights, reg.
- P
+: new weights, T
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-T refined
+regP refined
 \end_layout
 
 \end_inset
