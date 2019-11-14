@@ -30,10 +30,10 @@ AS
 BEGIN
 
     
-    --EXECUTE IMMEDIATE 'DROP TABLE EVAL_QANDEF';
+    --EXECUTE IMMEDIATE 'DROP TABLE EVAL_QANDEF_'||station||;
     
     str_ := '
-        CREATE TABLE EVAL_QANDEF
+        CREATE TABLE EVAL_QANDEF_'||station||'
         AS (
             --associated
             SELECT er.arid as arid_odb, er.time as time_odb, er.azimuth as azi_odb, er.iphase as iphase_qandef, ia.iphase as iphase_odb, ea.phase as assoc_phase
@@ -72,7 +72,7 @@ BEGIN
     
     EXECUTE IMMEDIATE str_;
     str_ := '                   
-       ALTER TABLE EVAL_QANDEF
+       ALTER TABLE EVAL_QANDEF_'||station||'
         ADD (class_iphase_qandef varchar2(5),
              class_iphase_odb varchar2(5),
              class_phase_odb  varchar2(5))';
@@ -80,7 +80,7 @@ BEGIN
     EXECUTE IMMEDIATE str_;
     
     str_ := '
-       ALTER TABLE EVAL_QANDEF
+       ALTER TABLE EVAL_QANDEF_'||station||'
         ADD (ncls_iphase_qandef number,
              ncls_iphase_odb number,
              ncls_phase_odb  number)';
@@ -89,44 +89,45 @@ BEGIN
         
     str_ := '
        begin
-        UPDATE EVAL_QANDEF SET CLASS_IPHASE_ODB = ''regS'', ncls_iphase_odb=3  where IPHASE_ODB in (''Sn'', ''Lg'', ''Rg'', ''Sx''); 
-        UPDATE EVAL_QANDEF SET CLASS_IPHASE_ODB = ''regP'', ncls_iphase_odb=2  where IPHASE_ODB in (''Pn'', ''Pg'', ''Px''); 
-        UPDATE EVAL_QANDEF SET CLASS_IPHASE_ODB = ''T'',    ncls_iphase_odb=1  where IPHASE_ODB in (''P'', ''PKP'', ''PKPbc'', ''PcP'', ''PKPab'', ''pP'', ''PP'', ''PKKPbc'', ''ScP'', ''SKPbc'', ''PKhKP'', ''PKiKP'', ''PKP2'', ''Pdiff'', ''SKP'', ''pPKP'', ''PKKPab'', ''pPKPbc'', ''PKKP'', ''SKKPbc'', ''PKP2bc'', ''P3KPbc'', ''sP'', ''SKPab'', ''P4KPbc'', ''PKP2ab'', ''pPKPab'', ''P3KP'', ''SKKP'', ''SKiKP'', ''SKKPab'', ''SKKS'', ''P4KP'', ''SP'', ''S'', ''ScS'', ''SS'', ''Sdiff'', ''pPcP'', ''sPKP'', ''tx'');
-        UPDATE EVAL_QANDEF SET CLASS_IPHASE_ODB = ''N'',    ncls_iphase_odb=0  where IPHASE_ODB in (''N'');
+        UPDATE EVAL_QANDEF_'||station||' SET CLASS_IPHASE_ODB = ''regS'', ncls_iphase_odb=3  where IPHASE_ODB in (''Sn'', ''Lg'', ''Rg'', ''Sx''); 
+        UPDATE EVAL_QANDEF_'||station||' SET CLASS_IPHASE_ODB = ''regP'', ncls_iphase_odb=2  where IPHASE_ODB in (''Pn'', ''Pg'', ''Px''); 
+        UPDATE EVAL_QANDEF_'||station||' SET CLASS_IPHASE_ODB = ''T'',    ncls_iphase_odb=1  where IPHASE_ODB in (''P'', ''PKP'', ''PKPbc'', ''PcP'', ''PKPab'', ''pP'', ''PP'', ''PKKPbc'', ''ScP'', ''SKPbc'', ''PKhKP'', ''PKiKP'', ''PKP2'', ''Pdiff'', ''SKP'', ''pPKP'', ''PKKPab'', ''pPKPbc'', ''PKKP'', ''SKKPbc'', ''PKP2bc'', ''P3KPbc'', ''sP'', ''SKPab'', ''P4KPbc'', ''PKP2ab'', ''pPKPab'', ''P3KP'', ''SKKP'', ''SKiKP'', ''SKKPab'', ''SKKS'', ''P4KP'', ''SP'', ''S'', ''ScS'', ''SS'', ''Sdiff'', ''pPcP'', ''sPKP'', ''tx'');
+        UPDATE EVAL_QANDEF_'||station||' SET CLASS_IPHASE_ODB = ''N'',    ncls_iphase_odb=0  where IPHASE_ODB in (''N'');
         
-        UPDATE EVAL_QANDEF SET CLASS_PHASE_ODB = ''regS'', ncls_phase_odb=3  where assoc_phase in (''Sn'', ''Lg'', ''Rg'', ''Sx''); 
-        UPDATE EVAL_QANDEF SET CLASS_PHASE_ODB = ''regP'', ncls_phase_odb=2  where assoc_phase in (''Pn'', ''Pg'', ''Px''); 
-        UPDATE EVAL_QANDEF SET CLASS_PHASE_ODB = ''T'',    ncls_phase_odb=1  where assoc_phase in (''P'', ''PKP'', ''PKPbc'', ''PcP'', ''PKPab'', ''pP'', ''PP'', ''PKKPbc'', ''ScP'', ''SKPbc'', ''PKhKP'', ''PKiKP'', ''PKP2'', ''Pdiff'', ''SKP'', ''pPKP'', ''PKKPab'', ''pPKPbc'', ''PKKP'', ''SKKPbc'', ''PKP2bc'', ''P3KPbc'', ''sP'', ''SKPab'', ''P4KPbc'', ''PKP2ab'', ''pPKPab'', ''P3KP'', ''SKKP'', ''SKiKP'', ''SKKPab'', ''SKKS'', ''P4KP'', ''SP'', ''S'', ''ScS'', ''SS'', ''Sdiff'', ''pPcP'', ''sPKP'', ''tx'');
-        UPDATE EVAL_QANDEF SET CLASS_PHASE_ODB = ''N'',    ncls_phase_odb=0  where assoc_phase is null;        
+        UPDATE EVAL_QANDEF_'||station||' SET CLASS_PHASE_ODB = ''regS'', ncls_phase_odb=3  where assoc_phase in (''Sn'', ''Lg'', ''Rg'', ''Sx''); 
+        UPDATE EVAL_QANDEF_'||station||' SET CLASS_PHASE_ODB = ''regP'', ncls_phase_odb=2  where assoc_phase in (''Pn'', ''Pg'', ''Px''); 
+        UPDATE EVAL_QANDEF_'||station||' SET CLASS_PHASE_ODB = ''T'',    ncls_phase_odb=1  where assoc_phase in (''P'', ''PKP'', ''PKPbc'', ''PcP'', ''PKPab'', ''pP'', ''PP'', ''PKKPbc'', ''ScP'', ''SKPbc'', ''PKhKP'', ''PKiKP'', ''PKP2'', ''Pdiff'', ''SKP'', ''pPKP'', ''PKKPab'', ''pPKPbc'', ''PKKP'', ''SKKPbc'', ''PKP2bc'', ''P3KPbc'', ''sP'', ''SKPab'', ''P4KPbc'', ''PKP2ab'', ''pPKPab'', ''P3KP'', ''SKKP'', ''SKiKP'', ''SKKPab'', ''SKKS'', ''P4KP'', ''SP'', ''S'', ''ScS'', ''SS'', ''Sdiff'', ''pPcP'', ''sPKP'', ''tx'');
+        UPDATE EVAL_QANDEF_'||station||' SET CLASS_PHASE_ODB = ''N'',    ncls_phase_odb=0  where assoc_phase is null;        
         
-        UPDATE EVAL_QANDEF SET CLASS_IPHASE_QANDEF = ''regS'', ncls_iphase_qandef=3  where IPHASE_QANDEF in (''Sn'', ''Lg'', ''Rg'', ''Sx''); 
-        UPDATE EVAL_QANDEF SET CLASS_IPHASE_QANDEF = ''regP'', ncls_iphase_qandef=2  where IPHASE_QANDEF in (''Pn'', ''Pg'', ''Px''); 
-        UPDATE EVAL_QANDEF SET CLASS_IPHASE_QANDEF = ''T'',    ncls_iphase_qandef=1  where IPHASE_QANDEF in (''P'', ''PKP'', ''PKPbc'', ''PcP'', ''PKPab'', ''pP'', ''PP'', ''PKKPbc'', ''ScP'', ''SKPbc'', ''PKhKP'', ''PKiKP'', ''PKP2'', ''Pdiff'', ''SKP'', ''pPKP'', ''PKKPab'', ''pPKPbc'', ''PKKP'', ''SKKPbc'', ''PKP2bc'', ''P3KPbc'', ''sP'', ''SKPab'', ''P4KPbc'', ''PKP2ab'', ''pPKPab'', ''P3KP'', ''SKKP'', ''SKiKP'', ''SKKPab'', ''SKKS'', ''P4KP'', ''SP'', ''S'', ''ScS'', ''SS'', ''Sdiff'', ''pPcP'', ''sPKP'', ''tx'');
-        UPDATE EVAL_QANDEF SET CLASS_IPHASE_QANDEF = ''N'',    ncls_iphase_qandef=0  where IPHASE_QANDEF in (''N'');
+        UPDATE EVAL_QANDEF_'||station||' SET CLASS_IPHASE_QANDEF = ''regS'', ncls_iphase_qandef=3  where IPHASE_QANDEF in (''Sn'', ''Lg'', ''Rg'', ''Sx''); 
+        UPDATE EVAL_QANDEF_'||station||' SET CLASS_IPHASE_QANDEF = ''regP'', ncls_iphase_qandef=2  where IPHASE_QANDEF in (''Pn'', ''Pg'', ''Px''); 
+        UPDATE EVAL_QANDEF_'||station||' SET CLASS_IPHASE_QANDEF = ''T'',    ncls_iphase_qandef=1  where IPHASE_QANDEF in (''P'', ''PKP'', ''PKPbc'', ''PcP'', ''PKPab'', ''pP'', ''PP'', ''PKKPbc'', ''ScP'', ''SKPbc'', ''PKhKP'', ''PKiKP'', ''PKP2'', ''Pdiff'', ''SKP'', ''pPKP'', ''PKKPab'', ''pPKPbc'', ''PKKP'', ''SKKPbc'', ''PKP2bc'', ''P3KPbc'', ''sP'', ''SKPab'', ''P4KPbc'', ''PKP2ab'', ''pPKPab'', ''P3KP'', ''SKKP'', ''SKiKP'', ''SKKPab'', ''SKKS'', ''P4KP'', ''SP'', ''S'', ''ScS'', ''SS'', ''Sdiff'', ''pPcP'', ''sPKP'', ''tx'');
+        UPDATE EVAL_QANDEF_'||station||' SET CLASS_IPHASE_QANDEF = ''N'',    ncls_iphase_qandef=0  where IPHASE_QANDEF in (''N'');
        end;';  -- 747 vs. 784 - some arrivals are missing, probably those retimed by analysts
     EXECUTE IMMEDIATE str_;
 
     EXECUTE IMMEDIATE 'COMMIT';
     
-    select count(*) INTO total_num  from EVAL_OPS; --25331
-    select count(*) INTO assoc_auto_num from EVAL_OPS where assoc_phase is not null and class_iphase_odb is not null; -- automatic detection which were associated
+    /*
+    select count(*) INTO total_num  from EVAL_OPS_PPT; --25331
+    select count(*) INTO assoc_auto_num from EVAL_OPS_PPT where assoc_phase is not null and class_iphase_odb is not null; -- automatic detection which were associated
 
     --counts
-    select count(*) INTO assoc_num_S from EVAL_OPS where CLASS_PHASE_ODB='regS' and assoc_phase is not null; --
-    select count(*) INTO assoc_num_P from EVAL_OPS where CLASS_PHASE_ODB='regP' and assoc_phase is not null; 
-    select count(*) INTO assoc_num_T from EVAL_OPS where CLASS_PHASE_ODB='T' and assoc_phase is not null; -- 
+    select count(*) INTO assoc_num_S from EVAL_OPS_PPT where CLASS_PHASE_ODB='regS' and assoc_phase is not null; --
+    select count(*) INTO assoc_num_P from EVAL_OPS_PPT where CLASS_PHASE_ODB='regP' and assoc_phase is not null; 
+    select count(*) INTO assoc_num_T from EVAL_OPS_PPT where CLASS_PHASE_ODB='T' and assoc_phase is not null; -- 
 
 
     --correct counts    
-    select count(*) INTO assoc_corr_num_S from EVAL_OPS where class_iphase_odb='regS' and CLASS_PHASE_ODB='regS' and assoc_phase is not null; -- 
-    select count(*) INTO assoc_corr_num_P from EVAL_OPS where class_iphase_odb='regP' and CLASS_PHASE_ODB='regP' and assoc_phase is not null; 
-    select count(*) INTO assoc_corr_num_T from EVAL_OPS where class_iphase_odb='T' and CLASS_PHASE_ODB='T' and assoc_phase is not null; --
+    select count(*) INTO assoc_corr_num_S from EVAL_OPS_PPT where class_iphase_odb='regS' and CLASS_PHASE_ODB='regS' and assoc_phase is not null; -- 
+    select count(*) INTO assoc_corr_num_P from EVAL_OPS_PPT where class_iphase_odb='regP' and CLASS_PHASE_ODB='regP' and assoc_phase is not null; 
+    select count(*) INTO assoc_corr_num_T from EVAL_OPS_PPT where class_iphase_odb='T' and CLASS_PHASE_ODB='T' and assoc_phase is not null; --
 
-    select count(*) INTO total_correct from EVAL_OPS where class_iphase_odb = class_phase_odb; -- 14552/25331 correct => 57.447396470727563
-    select count(*) INTO assoc_auto_correct from EVAL_OPS where class_iphase_odb = class_phase_odb and assoc_phase is not null; -- 2246/3525 cor => 63.71%
+    select count(*) INTO total_correct from EVAL_OPS_PPT where class_iphase_odb = class_phase_odb; -- 14552/25331 correct => 57.447396470727563
+    select count(*) INTO assoc_auto_correct from EVAL_OPS_PPT where class_iphase_odb = class_phase_odb and assoc_phase is not null; -- 2246/3525 cor => 63.71%
     
     -- N phase rate
-    select count(*) INTO assoc_N_phase_num from EVAL_OPS where class_iphase_odb='N' and assoc_phase is not null; -- 314/3525 8.9%
+    select count(*) INTO assoc_N_phase_num from EVAL_OPS_PPT where class_iphase_odb='N' and assoc_phase is not null; -- 314/3525 8.9%
         
     --DBMS_OUTPUT.PUT_LINE('----------------------------------------------------');
     --DBMS_OUTPUT.PUT_LINE(station||'   '||title);
@@ -153,12 +154,13 @@ BEGIN
     ELSE
        DBMS_OUTPUT.PUT_LINE(station||'   '||title||'  Total phases          '||total_num);
     END IF;
+    */
 END;
 
 
 
 BEGIN
-    nn_stats('1514764800', '1546300800', DATE '2018-01-01', DATE '2019-01-01', 'qandef title', 'LPAZ', 'RUNNNLPAZ1_ARRIVAL'); 
+    nn_stats('1514764800', '1546300800', DATE '2018-01-01', DATE '2019-01-01', 'qandef title', 'PPT', 'RUNNNPPT_ARRIVAL'); 
 END;
 
 --  1514764800.00000 2018001  2018/01/01 00:00:00.00000 Jan Mon
