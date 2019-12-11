@@ -12,6 +12,7 @@ import os
 from datetime import datetime as dt
 import matplotlib.pyplot as plt
 from dbtools import get_connection, exec_query
+import asyncio
 
 
 BYTES_PER_SAMPLE = {'t4': 4, 's3': 3, 's4': 4}
@@ -118,7 +119,7 @@ ORDER BY sta, chan, time, foff
     return query
 
 
-def fetch_wfdisc_entries(sta, chan, t1, t2, cursor):
+async def fetch_wfdisc_entries(sta, chan, t1, t2, cursor):
     """
     gets a wfdist entry(entrie) for given time, endtime
     :return: a list of wfdisc dictionaries - wfdicts
@@ -138,7 +139,7 @@ def get_samperates(wfdicts):
     return [wfd['samprate'] for wfd in wfdicts]
 
 
-def read_waveforms_from_files(t1, t2, wfdict, calib):
+async def read_waveforms_from_files(t1, t2, wfdict, calib):
     """
     reads waveform data from wfdisc files
     :return index: position of the first data item relative to t1
@@ -178,7 +179,7 @@ def read_waveforms_from_files(t1, t2, wfdict, calib):
     return round(index), round(nsamp), subdata, calib_fact
 
 
-def get_waveform_data(sta, chan, t1, t2, cursor, calib=True):
+async def get_waveform_data(sta, chan, t1, t2, cursor, calib=True):
     """
     crates a numpy array with samples
     :param sta: station
@@ -188,7 +189,7 @@ def get_waveform_data(sta, chan, t1, t2, cursor, calib=True):
     :param cursor: (oracle) db cursor
     :return: numpy array with samples
     """
-    wfdicts = fetch_wfdisc_entries(sta, chan, t1, t2, cursor)
+    wfdicts = await fetch_wfdisc_entries(sta, chan, t1, t2, cursor)
     samprates = get_samperates(wfdicts)
 
     if not samprates:
@@ -199,7 +200,7 @@ def get_waveform_data(sta, chan, t1, t2, cursor, calib=True):
         data = np.zeros(math.ceil((t2-t1)*sr))
         for wfdict in wfdicts:
             # now we must calculate which samples will be occupied by the retrieved data from each wfdisc file
-            index, nsamp, subdata, calib_fact = read_waveforms_from_files(t1, t2, wfdict, calib)
+            index, nsamp, subdata, calib_fact = await read_waveforms_from_files(t1, t2, wfdict, calib)
             # put data chunk in place
             data[index:index+nsamp] = subdata
     else:

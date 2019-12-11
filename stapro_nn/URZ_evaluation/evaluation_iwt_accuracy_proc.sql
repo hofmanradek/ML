@@ -137,7 +137,7 @@ END;
 
 
 BEGIN
-    --nn_stats(DATE '2018-03-13', DATE '2018-12-13', 'Old Weights', 'URZ');
+    --nn_stats(DATE '2018-02-01', DATE '2018-12-13', 'Old Weights', 'URZ');
     --nn_stats(DATE '2018-12-14', DATE '2019-09-30', 'New Weights', 'URZ');
     /*
     nn_stats(DATE '2010-01-01', DATE '2010-12-31', 'Old Weights', 'JCJ');
@@ -154,7 +154,7 @@ BEGIN
     
     
     
-    /* PRIMARY 3C
+    /*-- PRIMARY 3C
     nn_stats(DATE '2019-01-01', DATE '2019-12-31', 'Old Weights', 'KMBO'); 
     nn_stats(DATE '2019-01-01', DATE '2019-12-31', 'Old Weights', 'KBZ'); 
     nn_stats(DATE '2019-01-01', DATE '2019-12-31', 'Old Weights', 'THR'); 
@@ -202,11 +202,11 @@ BEGIN
     nn_stats(DATE '2019-01-01', DATE '2019-12-31', 'Old Weights', 'PSAR'); 
     nn_stats(DATE '2019-01-01', DATE '2019-12-31', 'Old Weights', 'TXAR');
     */
-    nn_stats(DATE '2019-01-01', DATE '2019-12-31', 'Old Weights', 'YKA'); 
+    --nn_stats(DATE '2019-01-01', DATE '2019-12-31', 'Old Weights', 'YKA'); 
     
     --AUXILIATY 3C stations
     
-    /*
+    
     nn_stats(DATE '2019-01-01', DATE '2019-12-31', 'Old Weights', 'BORG'); 
     nn_stats(DATE '2019-01-01', DATE '2019-12-31', 'Old Weights', 'JMIC'); 
     nn_stats(DATE '2019-01-01', DATE '2019-12-31', 'Old Weights', 'BBTS'); 
@@ -301,7 +301,7 @@ BEGIN
     nn_stats(DATE '2019-01-01', DATE '2019-12-31', 'Old Weights', 'MDP'); 
     nn_stats(DATE '2019-01-01', DATE '2019-12-31', 'Old Weights', 'SIV'); 
     nn_stats(DATE '2019-01-01', DATE '2019-12-31', 'Old Weights', 'RCBR'); 
-    */
+    
 END;
 
 
