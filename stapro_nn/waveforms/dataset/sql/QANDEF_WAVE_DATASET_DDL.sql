@@ -28,7 +28,7 @@ CREATE TABLE ML_WAVEFORMS
   STARTTIME         FLOAT,
   ENDTIME           FLOAT,
   NSAMP             NUMBER,
-  CALIBS             FLOAT,
+  CALIBS            BLOB,
   SAMPLES           BLOB --calibrated to 4byte float samples in binary
 ) ENABLE PRIMARY KEY USING INDEX;
 
@@ -56,7 +56,7 @@ COMMENT ON COLUMN ML_WAVEFORMS.SAMPRATE IS 'sampling rate';
 COMMENT ON COLUMN ML_WAVEFORMS.STARTTIME IS 'start time of stored waveform';
 COMMENT ON COLUMN ML_WAVEFORMS.ENDTIME IS 'end time of stored waveform';
 COMMENT ON COLUMN ML_WAVEFORMS.NSAMP IS 'number of samples stored';
-COMMENT ON COLUMN ML_WAVEFORMS.CALIB IS 'calibration values in the same order as CHANNE:S as 4Byte floats';
+COMMENT ON COLUMN ML_WAVEFORMS.CALIBS IS 'calibration values in the same order as CHANNE:S as 4Byte floats';
 COMMENT ON COLUMN ML_WAVEFORMS.SAMPLES IS 'binary blobs of calibrated samples of channels as 4byte floats in the same order as in CHANNELS';
 
 

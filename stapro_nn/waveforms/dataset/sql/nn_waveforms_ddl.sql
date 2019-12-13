@@ -1,23 +1,23 @@
-THIS TEXT WILL CAUSE ERROR WHEN RUN AS A SCRIPT
+--THIS TEXT WILL CAUSE ERROR WHEN RUN AS A SCRIPT
 
-/* safety comment:)
+-- safety comment:)
 -- continue on error
 WHENEVER SQLERROR CONTINUE;
 DROP INDEX IDX_ML_FEATURES_TIME;
 DROP INDEX IDX_ML_FEATURES_CONTEX_T;
 DROP TABLE ML_FEATURES;
+DROP CONSTRAINT ML_FEATURE_PK;
 -- exit on error from now on
-*/
+
 WHENEVER SQLERROR EXIT FAILURE;
 
 
 --define station name as a variable
 var station varchar2(5);
-exec :station := 'JCJ';
+exec :station := 'ROSC';
 
 var retimelimit number;
 exec :retimelimit := 10;
-
 
 CREATE TABLE ML_FEATURES
 ( 
@@ -46,15 +46,15 @@ CREATE TABLE ML_FEATURES
   HTOV3             FLOAT(24),
   HTOV4             FLOAT(24),
   HTOV5             FLOAT(24),
-  CONSTRAINT ML_FEATURE_PK PRIMARY KEY (ARID)
+  CONSTRAINT ML_FEATURE_PK1 PRIMARY KEY (ARID)
 ) ENABLE PRIMARY KEY USING INDEX;
 
 --create index on time of ML_FEATURES
-CREATE INDEX IDX_ML_FEATURES_TIME ON ML_FEATURES(TIME);
-CREATE INDEX IDX_ML_FEATURES_STA ON ML_FEATURES(STA);
+--CREATE INDEX IDX_ML_FEATURES_TIME ON ML_FEATURES(TIME);
+--CREATE INDEX IDX_ML_FEATURES_STA ON ML_FEATURES(STA);
 
-ALTER INDEX IDX_ML_FEATURES_TIME REBUILD;
-ALTER INDEX IDX_ML_FEATURES_STA REBUILD;
+--ALTER INDEX IDX_ML_FEATURES_TIME REBUILD;
+--ALTER INDEX IDX_ML_FEATURES_STA REBUILD;
 
 COMMENT ON COLUMN ML_FEATURES.ARID IS 'arrival id';
 COMMENT ON COLUMN ML_FEATURES.STA IS 'station';
@@ -137,7 +137,7 @@ and r.arid not in (select distinct arid from idcx.arrival)
 order by r.time; --2,098 rows inserted.
 
 
-select count(*) from ml_features where class_phase='regS' and sta=:station; --5791
+--select count(*) from ml_features where class_phase='regS' and sta=:station; --5791
 
 --------------------------------------------------------------------------------------------------------------------------------
 ----- regional P phases automatic
@@ -191,7 +191,7 @@ and r.arid not in (select distinct arid from idcx.arrival)
 order by r.time; --1795 rows inserted.
 
 
-select count(*) from ml_features where class_phase='regP' and sta=:station and source='H'; --11830
+--select count(*) from ml_features where class_phase='regP' and sta=:station and source='H'; --11830
 
 --------------------------------------------------------------------------------------------------------------------------------
 ----- T teleseismic phases (both P and S)
@@ -252,7 +252,7 @@ and r.arid not in (select distinct arid from idcx.arrival)
 order by r.time; --3,409 rows inserted. 
 
 
-select count(*) from ml_features where class_phase='T' and sta=:station; --18874
+--select count(*) from ml_features where class_phase='T' and sta=:station; --18874
 
 
 --------------------------------------------------------------------------------------------------------------------------------
@@ -331,9 +331,9 @@ select count(*) from ml_features where cphase='N' and sta=:station;
 */
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-select sta, class_phase "class phase", count(class_phase) "#" from ml_features where source in ('A') and class_phase in ('regP', 'regS', 'T', 'N') and retime<=10 group by class_phase, sta order by sta, class_phase;
-select sta, class_phase "class phase", count(class_phase) "#" from ml_features where source in ('A', 'M') and class_phase in ('regP', 'regS', 'T', 'N') and retime<=10 group by class_phase, sta order by sta, class_phase;
-select sta, class_phase "class phase", count(class_phase) "#" from ml_features where source in ('A', 'H', 'M') and class_phase in ('regP', 'regS', 'T', 'N') and retime<=10 group by class_phase, sta order by sta, class_phase;
+--select sta, class_phase "class phase", count(class_phase) "#" from ml_features where source in ('A') and class_phase in ('regP', 'regS', 'T', 'N') and retime<=10 group by class_phase, sta order by sta, class_phase;
+--select sta, class_phase "class phase", count(class_phase) "#" from ml_features where source in ('A', 'M') and class_phase in ('regP', 'regS', 'T', 'N') and retime<=10 group by class_phase, sta order by sta, class_phase;
+--select sta, class_phase "class phase", count(class_phase) "#" from ml_features where source in ('A', 'H', 'M') and class_phase in ('regP', 'regS', 'T', 'N') and retime<=10 group by class_phase, sta order by sta, class_phase;
 
 
 ---------------------------------------------------------------------------------------------------
@@ -347,7 +347,7 @@ DROP INDEX IDX_ML_FEATURES_CONTEX_T;
 DROP TABLE ML_FEATURES_CONTEXTUAL;
 WHENEVER SQLERROR EXIT FAILURE;
 
-select count(*) from ML_FEATURES_CONTEXTUAL;
+--select count(*) from ML_FEATURES_CONTEXTUAL;
 
 
 
@@ -378,8 +378,8 @@ select a.arid, a.time,
        --NULL, NULL, NULL,
        NULL,
        NULL
---from ML_features a where a.sta=:station and a.class_phase in ('regS', 'regP', 'T'); --32,640 rows inserted.
-from ML_features a where a.sta=:station and a.class_phase in ('N'); --142,271 rows inserted.
+from ML_features a where a.sta=:station and a.class_phase in ('regS', 'regP', 'T', 'N'); --32,640 rows inserted.
+--from ML_features a where a.sta=:station and a.class_phase in ('N'); --142,271 rows inserted.
 
 commit;
 
@@ -389,16 +389,32 @@ UPDATE ML_FEATURES_CONTEXTUAL SET NAB = (NAFTER-NBEFORE)/10. where arid in (sele
 UPDATE ML_FEATURES_CONTEXTUAL SET TAB =  (NVL(abs(TAFTER)/NULLIF(NAFTER,0.), 0.) - NVL(abs(TBEFORE)/NULLIF(NBEFORE,0.), 0.))/100.0 where arid in (select arid from ml_features where sta=:station);
 commit;
 
-select * from ML_FEATURES_CONTEXTUAL where arid=122995432;
-select * from ML_FEATURES where arid=122995432;
-select count(*) from ml_features where sta=:station;
-select count(*) from ml_features_contextual;
+
+--select count(*) from ML_FEATURES_CONTEXTUAL where NAFTER is null; --0
+--select count(*) from ML_FEATURES_CONTEXTUAL where NBEFORE is null; --0
+
+
+--select * from ML_FEATURES_CONTEXTUAL where arid=122995432;
+--select * from ML_FEATURES where arid=122995432;
+--select count(*) from ml_features where sta=:station;
+--select count(*) from ml_features_contextual;
 
 -- now we plug the contextual features into to feature table
 UPDATE ML_FEATURES a SET (a.NAB, a.TAB) = (SELECT b.NAB, b.TAB from ML_FEATURES_CONTEXTUAL b WHERE a.arid=b.arid) where a.sta=:station;
 --174,911 rows updated.
+commit;
 
 
+UPDATE ML_FEATURES SET CLASS_IPHASE = 'regS' where IPHASE in ('Sn', 'Lg', 'Rg', 'Sx'); 
+--UPDATE ML_FEATURES SET CLASS_IPHASE = 'regS' where IPHASE in ('LR'); 
+UPDATE ML_FEATURES SET CLASS_IPHASE = 'regP' where IPHASE in ('Pn', 'Pg', 'Px'); 
+UPDATE ML_FEATURES SET CLASS_IPHASE = 'T' where IPHASE in ('P', 'PKP', 'PKPbc', 'PcP', 'PKPab', 'pP', 'PP', 'PKKPbc', 'ScP', 'SKPbc', 'PKhKP', 'PKiKP', 'PKP2', 'Pdiff', 'SKP', 'pPKP', 'PKKPab', 'pPKPbc', 'PKKP', 'SKKPbc', 'PKP2bc', 'P3KPbc', 'sP', 'SKPab', 'P4KPbc', 'PKP2ab', 'pPKPab', 'P3KP', 'SKKP', 'SKiKP', 'SKKPab', 'SKKS', 'P4KP', 'SP', 'S', 'ScS', 'SS', 'Sdiff', 'pPcP', 'sPKP', 'tx');
+UPDATE ML_FEATURES SET CLASS_IPHASE = 'N' where IPHASE='N'; 
+
+commit;
+
+--select count(*) from ml_features where nab is null; --must be 0
+--select count(*) from ml_features where tab is null; --must be 0
 
 -- check size of tables...
 select segment_name, bytes/1024/1024||' MB' from user_segments where segment_type='TABLE' and segment_name like 'ML%';
@@ -439,13 +455,6 @@ commit;
 
 ----------------------------POPULATE CLASS_IPHASE column
 
-UPDATE ML_FEATURES SET CLASS_IPHASE = 'regS' where IPHASE in ('Sn', 'Lg', 'Rg', 'Sx'); 
-UPDATE ML_FEATURES SET CLASS_IPHASE = 'regS' where IPHASE in ('LR'); 
-UPDATE ML_FEATURES SET CLASS_IPHASE = 'regP' where IPHASE in ('Pn', 'Pg', 'Px'); 
-UPDATE ML_FEATURES SET CLASS_IPHASE = 'T' where IPHASE in ('P', 'PKP', 'PKPbc', 'PcP', 'PKPab', 'pP', 'PP', 'PKKPbc', 'ScP', 'SKPbc', 'PKhKP', 'PKiKP', 'PKP2', 'Pdiff', 'SKP', 'pPKP', 'PKKPab', 'pPKPbc', 'PKKP', 'SKKPbc', 'PKP2bc', 'P3KPbc', 'sP', 'SKPab', 'P4KPbc', 'PKP2ab', 'pPKPab', 'P3KP', 'SKKP', 'SKiKP', 'SKKPab', 'SKKS', 'P4KP', 'SP', 'S', 'ScS', 'SS', 'Sdiff', 'pPcP', 'sPKP', 'tx');
-UPDATE ML_FEATURES SET CLASS_IPHASE = 'N' where IPHASE='N'; 
-
-commit;
 
 
 

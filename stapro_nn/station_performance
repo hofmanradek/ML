@@ -1,0 +1,213 @@
+------------------------------------------------
+stations to retrain:
+------------------------------------------------
+ROSC   Old Weights  Total phases 20371 |  year 19 |  Accuracy all 44.02%  | Correct associated 269   (24.10%)  PRIMARY  # Training summary: Accuracy: 61.86%, assoc accuracy: 57.75%, Nphaserate: 11.70%, assoc. ph: 2367, noise ph: 20630
+JCJ    Old Weights  Total phases 5696  |  year 19 |  Accuracy all 46.51%  | Correct associated 227   (29.21%)  AUXILIA  # Training summary: Accuracy: 74.43%, assoc accuracy: 45.56%, Nphaserate: 10.84%, assoc. ph: 1826, noise ph: 8601
+FITZ   Old Weights  Total phases 22943 |  year 19 |  Accuracy all 45.23%  | Correct associated 3005  (50.97%)
+PPT    Old Weights  Total phases 21445 |  year 19 |  Accuracy all 57.67%  | Correct associated 125   (59.81%)  PRIMARY   # DEPRECATED Training summary: Accuracy: 69.85%, assoc accuracy: 78.89%, Nphaserate: 13.33%, assoc. ph: 555, noise ph: 27500
+NRIK   Old Weights  Total phases 36847 |  year 19 |  Accuracy all 20.48%  | Correct associated 1812  (93.98%)
+VRAC   Old Weights  Total phases 8594  |  year 19 |  Accuracy all 65.51%  | Correct associated 428   (65.75%)
+CFA    Old Weights  Total phases 8326  |  year 19 |  Accuracy all 24.99%  | Correct associated 380   (41.58%)  -----None correctly classified NPHASESE
+JTS    Old Weights  Total phases 6918  |  year 19 |  Accuracy all 43.83%  | Correct associated 354   (49.24%)
+JHJ    Old Weights  Total phases 4039  |  year 19 |  Accuracy all 52.17%  | Correct associated 171   (26.47%)
+JKA    Old Weights  Total phases 9825  |  year 19 |  Accuracy all 53.36%  | Correct associated 922   (49.12%)
+LPAZ   Old Weights  Total phases 43284 |  year 19 |  Accuracy all 31.85%  | Correct associated 2967  (76.57%)  PRIMARY  # DEPRECATED Training summary: Accuracy: 48%, assoc accuracy: 79.5%, Nphaserate: 3.12%, assoc. ph: 8077, noise ph: 31313
+
+URZ    New Weights  Total phases 25935 |  year 19 |  Accuracy all 57.26%  | Correct associated 2322  (63.60%)
+------------------------------------------------
+
+
+------------------------------PHASE NUMBERS IN DATASET
+CFA	N	1725
+CFA	T	4495
+CFA	regP	840
+CFA	regS	662
+-----------------------
+FITZ	N	162558
+FITZ	T	100133
+FITZ	regP	22292
+FITZ	regS	17114
+-----------------------
+JCJ	N	146203
+JCJ	T	19407
+JCJ	regP	8036
+JCJ	regS	5865
+-----------------------
+JHJ	N	106280
+JHJ	T	18890
+JHJ	regP	13672
+JHJ	regS	11892
+-----------------------
+JKA	N	150291
+JKA	T	42255
+JKA	regP	13488
+JKA	regS	5001
+-----------------------
+JTS	N	47849
+JTS	T	7317
+JTS	regP	4164
+JTS	regS	2868
+-----------------------
+LPAZ	N	333076
+LPAZ	T	95619
+LPAZ	regP	7649
+LPAZ	regS	1361
+-----------------------
+NRIK	N	59844
+NRIK	T	22519
+NRIK	regP	125
+NRIK	regS	128
+-----------------------
+PPT	N	256681
+PPT	T	4517
+PPT	regP	11
+PPT	regS	7
+-----------------------
+ROSC	N	186994
+ROSC	T	21199
+ROSC	regP	2500
+ROSC	regS	1204
+-----------------------
+VRAC	N	189204
+VRAC	T	10960
+VRAC	regP	5824
+VRAC	regS	4237
+
+
+
+PRIMARY 3C STATIONS
+
+LPAZ   Old Weights  Total phases 43284 |  year 19 |  Accuracy all 31.85%  | Correct associated 2967  (76.57%)
+ROSC   Old Weights  Total phases 20371 |  year 19 |  Accuracy all 44.02%  | Correct associated 269  (24.1%)
+PPT   Old Weights  Total phases 21445 |  year 19 |  Accuracy all 57.67%  | Correct associated 125  (59.81%)
+NRIK   Old Weights  Total phases 36847 |  year 19 |  Accuracy all 20.48%  | Correct associated 1812  (93.98%)
+STKA   Old Weights  Total phases 113570 |  year 19 |  Accuracy all 59.99%  | Correct associated 4823  (73.85%)
+PLCA   Old Weights  Total phases 101277 |  year 19 |  Accuracy all 44.7%  | Correct associated 2514  (82.05%)
+KEST   Old Weights  Total phases 23012 |  year 19 |  Accuracy all 25.47%  | Correct associated 952  (77.71%)
+ULM   Old Weights  Total phases 38146 |  year 19 |  Accuracy all 60.39%  | Correct associated 1967  (81.31%)
+CPUP   Old Weights  Total phases 86508 |  year 19 |  Accuracy all 40.62%  | Correct associated 1969  (80.43%)
+BOSA   Old Weights  Total phases 41919 |  year 19 |  Accuracy all 35.3%  | Correct associated 1929  (84.05%)
+
+
+KBZ   Old Weights  Total phases 19387 |  year 19 |  Accuracy all 36.27%  | Correct associated 2733  (87.43%)
+KMBO   Old Weights  Total phases 91119 |  year 19 |  Accuracy all 53.39%  | Correct associated 454  (69%)
+
+THR   Old Weights  Total phases          0
+LZDM   Old Weights  Total phases 1758 |  year 19 |  Accuracy all 52.56%  | Correct associated 126  (88.11%)
+SCHQ   Old Weights  Total phases 17521 |  year 19 |  Accuracy all 53.72%  | Correct associated 1181  (80.12%)
+BDFB   Old Weights  Total phases 32716 |  year 19 |  Accuracy all 59.58%  | Correct associated 1860  (86.15%)
+DBIC   Old Weights  Total phases 35003 |  year 19 |  Accuracy all 34.39%  | Correct associated 1868  (89.89%)
+
+
+
+AUXILIARY 3C STATIONS
+
+PL/SQL procedure successfully completed.
+
+BORG   Old Weights  Total phases 3591 |  year 19 |  Accuracy all 63.41%  | Correct associated 52  (44.07%)
+JMIC   Old Weights  Total phases 3773 |  year 19 |  Accuracy all 65.36%  | Correct associated 24  (45.28%)
+BBTS   Old Weights  Total phases 272 |  year 19 |  Accuracy all 16.91%  | Correct associated 30  (75%)
+MDT   Old Weights  Total phases 3728 |  year 19 |  Accuracy all 26.8%  | Correct associated 199  (87.28%)
+KOWA   Old Weights  Total phases          0
+DAVOX   Old Weights  Total phases 6493 |  year 19 |  Accuracy all 69.37%  | Correct associated 455  (59.63%)
+VRAC   Old Weights  Total phases 8594 |  year 19 |  Accuracy all 65.51%  | Correct associated 428  (65.75%)
+VAE   Old Weights  Total phases 11867 |  year 19 |  Accuracy all 57.56%  | Correct associated 145  (39.84%)
+MSKU   Old Weights  Total phases          0
+TSUM   Old Weights  Total phases 1581 |  year 19 |  Accuracy all 65.65%  | Correct associated 94  (62.67%)
+SUR   Old Weights  Total phases 690 |  year 19 |  Accuracy all 58.84%  | Correct associated 43  (44.79%)
+LBTB   Old Weights  Total phases 1908 |  year 19 |  Accuracy all 46.07%  | Correct associated 303  (76.13%)
+IDI   Old Weights  Total phases 8340 |  year 19 |  Accuracy all 55.06%  | Correct associated 615  (53.9%)
+MLR   Old Weights  Total phases 10386 |  year 19 |  Accuracy all 59.89%  | Correct associated 451  (54.87%)
+MATP   Old Weights  Total phases 1705 |  year 19 |  Accuracy all 42.64%  | Correct associated 181  (58.96%)
+LSZ   Old Weights  Total phases 3028 |  year 19 |  Accuracy all 54.66%  | Correct associated 157  (47.29%)
+MBAR   Old Weights  Total phases 365 |  year 19 |  Accuracy all 33.15%  | Correct associated 12  (70.59%)
+EIL   Old Weights  Total phases 4967 |  year 19 |  Accuracy all 37%  | Correct associated 405  (48.68%)
+ASF   Old Weights  Total phases 7229 |  year 19 |  Accuracy all 52.93%  | Correct associated 454  (59.66%)
+FURI   Old Weights  Total phases 117 |  year 19 |  Accuracy all 26.5%  | Correct associated 0  (0%)
+OBN   Old Weights  Total phases 10213 |  year 19 |  Accuracy all 56.95%  | Correct associated 205  (60.29%)
+KIRV   Old Weights  Total phases 3781 |  year 19 |  Accuracy all 21.95%  | Correct associated 350  (92.11%)
+BELG   Old Weights  Total phases 5487 |  year 19 |  Accuracy all 8.18%  | Correct associated 449  (81.34%)
+KVAR   Old Weights  Total phases 378 |  year 19 |  Accuracy all 36.51%  | Correct associated 2  (28.57%)
+GNI   Old Weights  Total phases 5964 |  year 19 |  Accuracy all 63.1%  | Correct associated 264  (50.97%)
+ATD   Old Weights  Total phases 1181 |  year 19 |  Accuracy all 32.77%  | Correct associated 53  (50.48%)
+OPO   Old Weights  Total phases 4205 |  year 19 |  Accuracy all 48.68%  | Correct associated 172  (65.15%)
+ARTI   Old Weights  Total phases 10084 |  year 19 |  Accuracy all 10.13%  | Correct associated 1022  (85.74%)
+AKTO   Old Weights  Total phases 8630 |  year 19 |  Accuracy all 47.47%  | Correct associated 1254  (75.09%)
+WSAR   Old Weights  Total phases 2060 |  year 19 |  Accuracy all 29.32%  | Correct associated 185  (36.42%)
+AAK   Old Weights  Total phases 9546 |  year 19 |  Accuracy all 32.37%  | Correct associated 987  (54.26%)
+PALK   Old Weights  Total phases 1281 |  year 19 |  Accuracy all 30.84%  | Correct associated 153  (58.62%)
+BRDH   Old Weights  Total phases 960 |  year 19 |  Accuracy all 29.79%  | Correct associated 82  (45.56%)
+TLY   Old Weights  Total phases          0
+PSI   Old Weights  Total phases 11754 |  year 19 |  Accuracy all 61.25%  | Correct associated 399  (49.32%)
+XAN   Old Weights  Total phases          0
+LEM   Old Weights  Total phases 7175 |  year 19 |  Accuracy all 14.33%  | Correct associated 240  (39.09%)
+TGY   Old Weights  Total phases 15615 |  year 19 |  Accuracy all 71.53%  | Correct associated 232  (39.26%)
+KAPI   Old Weights  Total phases 26026 |  year 19 |  Accuracy all 33.54%  | Correct associated 1038  (57.44%)
+NWAO   Old Weights  Total phases 2834 |  year 19 |  Accuracy all 46.4%  | Correct associated 182  (57.05%)
+DAV   Old Weights  Total phases 11840 |  year 19 |  Accuracy all 27.41%  | Correct associated 331  (36.66%)
+BATI   Old Weights  Total phases 6001 |  year 19 |  Accuracy all 36.26%  | Correct associated 520  (40.69%)
+FITZ   Old Weights  Total phases 22943 |  year 19 |  Accuracy all 45.23%  | Correct associated 3005  (50.97%)
+SIJI   Old Weights  Total phases          0
+JOW   Old Weights  Total phases 15443 |  year 19 |  Accuracy all 49.04%  | Correct associated 751  (61.61%)
+JNU   Old Weights  Total phases 10798 |  year 19 |  Accuracy all 41.63%  | Correct associated 715  (62.5%)
+KLR   Old Weights  Total phases 5524 |  year 19 |  Accuracy all 31.5%  | Correct associated 1107  (86.42%)
+YAK   Old Weights  Total phases 4005 |  year 19 |  Accuracy all 21.82%  | Correct associated 617  (91.41%)
+TIXI   Old Weights  Total phases 7570 |  year 19 |  Accuracy all 45.68%  | Correct associated 380  (79.33%)
+SEY   Old Weights  Total phases 8534 |  year 19 |  Accuracy all 14.71%  | Correct associated 721  (70.34%)
+MA2   Old Weights  Total phases 3476 |  year 19 |  Accuracy all 39.18%  | Correct associated 512  (77.69%)
+JKA   Old Weights  Total phases 9825 |  year 19 |  Accuracy all 53.36%  | Correct associated 922  (49.12%)
+JHJ   Old Weights  Total phases 4039 |  year 19 |  Accuracy all 52.17%  | Correct associated 171  (26.47%)
+JCJ   Old Weights  Total phases 5696 |  year 19 |  Accuracy all 46.51%  | Correct associated 227  (29.21%)
+GUMO   Old Weights  Total phases 8074 |  year 19 |  Accuracy all 51.94%  | Correct associated 296  (46.39%)
+PMG   Old Weights  Total phases 19241 |  year 19 |  Accuracy all 54.17%  | Correct associated 920  (41.61%)
+CTA   Old Weights  Total phases 1588 |  year 19 |  Accuracy all 51.76%  | Correct associated 109  (64.5%)
+KRVT   Old Weights  Total phases          0
+HNR   Old Weights  Total phases 15242 |  year 19 |  Accuracy all 36.79%  | Correct associated 278  (47.44%)
+SHEM   Old Weights  Total phases 10196 |  year 19 |  Accuracy all 2.64%  | Correct associated 269  (59.51%)
+DZM   Old Weights  Total phases 19963 |  year 19 |  Accuracy all 39.12%  | Correct associated 668  (31.64%)
+RPZ   Old Weights  Total phases 8917 |  year 19 |  Accuracy all 60.63%  | Correct associated 323  (44.01%)
+URZ   NEW Weights  Total phases 25655 |  year 19 |  Accuracy all 57.26%  | Correct associated 2290  (63.56%)
+RAO   Old Weights  Total phases 13602 |  year 19 |  Accuracy all 23.28%  | Correct associated 369  (44.14%)
+MSVF   Old Weights  Total phases 13885 |  year 19 |  Accuracy all 5.38%  | Correct associated 747  (42.86%)
+AFI   Old Weights  Total phases          0
+RAR   Old Weights  Total phases 19883 |  year 19 |  Accuracy all 75.35%  | Correct associated 203  (59.71%)
+KDAK   Old Weights  Total phases 8441 |  year 19 |  Accuracy all 59.52%  | Correct associated 543  (49.1%)
+INK   Old Weights  Total phases 11694 |  year 19 |  Accuracy all 50.92%  | Correct associated 646  (64.54%)
+DLBC   Old Weights  Total phases 10262 |  year 19 |  Accuracy all 47.61%  | Correct associated 390  (58.82%)
+BBB   Old Weights  Total phases 10713 |  year 19 |  Accuracy all 56.49%  | Correct associated 196  (67.12%)
+YBH   Old Weights  Total phases 9673 |  year 19 |  Accuracy all 63.31%  | Correct associated 295  (51.57%)
+RPN   Old Weights  Total phases 87 |  year 19 |  Accuracy all 54.02%  | Correct associated 2  (100%)
+NEW   Old Weights  Total phases 6781 |  year 19 |  Accuracy all 67.94%  | Correct associated 325  (64.36%)
+ELK   Old Weights  Total phases 10538 |  year 19 |  Accuracy all 62.57%  | Correct associated 632  (56.43%)
+PFO   Old Weights  Total phases 5883 |  year 19 |  Accuracy all 27.91%  | Correct associated 508  (60.98%)
+LPIG   Old Weights  Total phases 11222 |  year 19 |  Accuracy all 23.95%  | Correct associated 52  (39.39%)
+ANMO   Old Weights  Total phases 9429 |  year 19 |  Accuracy all 66.73%  | Correct associated 446  (53.54%)
+CMIG   Old Weights  Total phases 6770 |  year 19 |  Accuracy all 36.07%  | Correct associated 358  (47.35%)
+APG   Old Weights  Total phases 1258 |  year 19 |  Accuracy all 27.74%  | Correct associated 93  (46.97%)
+TEIG   Old Weights  Total phases 8917 |  year 19 |  Accuracy all 39.5%  | Correct associated 20  (6.19%)
+JTS   Old Weights  Total phases 6918 |  year 19 |  Accuracy all 43.83%  | Correct associated 354  (49.24%)
+TKL   Old Weights  Total phases 5516 |  year 19 |  Accuracy all 35.12%  | Correct associated 240  (71.64%)
+SADO   Old Weights  Total phases 3278 |  year 19 |  Accuracy all 59.46%  | Correct associated 82  (70.09%)
+ATAH   Old Weights  Total phases 3859 |  year 19 |  Accuracy all 43.09%  | Correct associated 319  (54.07%)
+NNA   Old Weights  Total phases 2905 |  year 19 |  Accuracy all 32.36%  | Correct associated 275  (46.14%)
+LVC   Old Weights  Total phases          0
+CFA   Old Weights  Total phases 8326 |  year 19 |  Accuracy all 24.99%  | Correct associated 380  (41.58%)
+SJG   Old Weights  Total phases 3886 |  year 19 |  Accuracy all 57.59%  | Correct associated 170  (59.03%)
+PCRV   Old Weights  Total phases 2711 |  year 19 |  Accuracy all 46.4%  | Correct associated 180  (52.02%)
+PTGA   Old Weights  Total phases          0
+MDP   Old Weights  Total phases 1136 |  year 19 |  Accuracy all 28.08%  | Correct associated 148  (64.63%)
+SIV   Old Weights  Total phases 8464 |  year 19 |  Accuracy all 48.74%  | Correct associated 1061  (74.88%)
+RCBR   Old Weights  Total phases 309 |  year 19 |  Accuracy all 20.06%  | Correct associated 41  (46.59%)
+
+
+
+-------------------NEW WEIGHTS
+URZ   New Weights  Total phases 25935 |  year 19 |  Accuracy all 57.26%  | Correct associated 2322  (63.6%)
+
+
+
+
+
+
+
+
