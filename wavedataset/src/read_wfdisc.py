@@ -184,7 +184,7 @@ def read_waveforms_from_files(t1, t2, wfdict, calib, sr):
     #offset in wfdisc entry is in bytes
     with open(path, 'rb') as f:
         # we seek to the beginning of current station/channel
-        print('reading wfdisc: ', path)
+        #print('reading wfdisc: ', path)
 
         # we calculate sample start and sample end for this particular wfdisc file
         startsample = int((tstart - time) * samprate) # int(round((tstart - time) * samprate))
@@ -192,7 +192,7 @@ def read_waveforms_from_files(t1, t2, wfdict, calib, sr):
         nsamp = endsample - startsample + 1  # this must be calculated, sometimes we read not of all samples
         f.seek(offset)
         # read raw data into numpy uint8 ndarray
-        print('= number of samples: %d' % nsamp)
+        #print('= number of samples: %d' % nsamp)
         raw_data = np.fromfile(f, dtype='uint8')  #, count=int(round(nsamp * bytes_per_sample)))
 
         # convert to floats given its particular type
@@ -220,7 +220,7 @@ def get_waveform_data(sta, chan, t1, t2, cursor, calib=True):
         sr = round(np.mean(get_samperates(wfdicts)))
         data = np.zeros(int(math.ceil((t2 - t1) * sr)))
         data_masks = np.ones(int(math.ceil((t2 - t1) * sr)))
-        print('SAMPRATE: %3.2f Hz  %s' % (sr, get_samperates(wfdicts)))
+        #print('SAMPRATE: %3.2f Hz  %s' % (sr, get_samperates(wfdicts)))
 
         for wfdict in wfdicts:
             # now we must calculate which samples will be occupied by the retrieved data from each wfdisc file

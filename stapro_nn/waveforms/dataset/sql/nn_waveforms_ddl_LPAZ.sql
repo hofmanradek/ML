@@ -266,6 +266,29 @@ and r.arid not in (select distinct arid from leb.assoc@extadb)
 order by r.time; --309,840
 
 
+-----------------------------------------------------------------------
+--INSERT NOISE PHASE CLASSSIFIED AS NOT NOISE BY OLD WEIGHTS
+-----------------------------------------------------------------------
+insert into ML_FEATURES 
+select r.arid "arid", r.sta "sta", r.time "time", r.iphase "iphase", 'N' "cphase", NULL "phase", 0 "retime", 'Z' "source", r.per "per", r.slow "slow", ap.rect "rect", ap.plans "plans",
+       ap.inang1 "inang1", ap.inang3 "inang3", ap.hmxmn "hmxmn", ap.hvratp "hvratp", ap.hvrat "hvrat", NULL "nab", NULL "tab", a1.htov "htov1", a2.htov "htov2", a3.htov "htov3", a4.htov "htov4", a5.htov "htov5" 
+from idcx.arrival@extadb r 
+join idcx.apma@extadb  ap on r.arid=ap.arid 
+join idcx.amp3c@extadb a1 on r.arid=a1.arid 
+join idcx.amp3c@extadb a2 on r.arid=a2.arid 
+join idcx.amp3c@extadb a3 on r.arid=a3.arid 
+join idcx.amp3c@extadb a4 on r.arid=a4.arid 
+join idcx.amp3c@extadb a5 on r.arid=a5.arid
+where r.sta='LPAZ' 
+and a1.cfreq=0.25 
+and a2.cfreq=0.5 
+and a3.cfreq=1 
+and a4.cfreq=2 
+and a5.cfreq=4 
+and r.iphase!='N' 
+and r.arid not in (select distinct arid from leb.assoc@extadb)
+order by r.time; --309,840
+
 select count(*) from ml_features where cphase='N'; --88015
 
 
